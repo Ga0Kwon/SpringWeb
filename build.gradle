@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.10'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web' //스프링부트
+    compileOnly 'org.projectlombok:lombok' //룸북
+    annotationProcessor 'org.projectlombok:lombok' //룸북
+    runtimeOnly 'com.mysql:mysql-connector-j' //mysql
+    testImplementation 'org.springframework.boot:spring-boot-starter-test' //스프링부트 테스터
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //JPA
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
