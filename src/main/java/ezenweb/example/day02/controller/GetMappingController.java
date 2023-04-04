@@ -35,7 +35,7 @@ public class GetMappingController {
     }
 
     //4.
-    @GetMapping("/method4")  // http://localhost:8080/get/method3?param1=value1&
+    @GetMapping("/method4")  // http://localhost:8080/get/method3
     public Map<String, String> method4(@RequestParam Map<String, String> params) {
         log.info("클라이언트로부터 받은 변수 :" + params);
         return params;
