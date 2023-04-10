@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+//jpa 안쓴 버전
 public class Dao {
     private Connection conn ;
     private PreparedStatement ps;
