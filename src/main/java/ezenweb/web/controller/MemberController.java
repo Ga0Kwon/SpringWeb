@@ -4,6 +4,8 @@ import ezenweb.web.domain.member.MemberDto;
 import ezenweb.web.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 
 @RestController // @Contoller + @ResponseBody
@@ -18,6 +20,21 @@ public class MemberController {
         return service;
       }
     */
+
+    /*
+        JSP URI 구조 => 프로젝트내 경로
+	    SPRING URI 구조 => Restful API
+    */
+    @GetMapping("/signup")
+    public Resource getSignup(){
+        return new ClassPathResource("templates/member/signup.html");
+    }
+
+    @GetMapping("/login")
+    public Resource getLogin(){
+        return new ClassPathResource("templates/member/login.html");
+    }
+
 
     @Autowired
     MemberService memberService;
@@ -51,5 +68,11 @@ public class MemberController {
         boolean result =  memberService.delete(mno);
         return result;
     }
-
+    
+    // ------------------ 스프링 시큐리티 사용화 전 ------------------------
+    @PostMapping("/login") //@Mapping이 다르면 URL는 같아도 된다.
+    public boolean login(@RequestBody MemberDto memberDto){
+        boolean result = memberService.login(memberDto);
+        return result;
+    }
 }
