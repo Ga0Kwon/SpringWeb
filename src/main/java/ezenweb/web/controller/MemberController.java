@@ -8,6 +8,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Member;
+
 @RestController // @Contoller + @ResponseBody
 @Slf4j //로그 기능 주입
 @RequestMapping("/member")
@@ -35,7 +37,8 @@ public class MemberController {
         return new ClassPathResource("templates/member/login.html");
     }
 
-
+    @GetMapping("/update")
+    public Resource getUpdate(){return new ClassPathResource("templates/member/update.html");}
     @Autowired
     MemberService memberService;
 
@@ -46,12 +49,10 @@ public class MemberController {
         boolean result = memberService.write(memberDto);
         return result;
     }
-
     //2. 회원 정보 호출 [R]
     @GetMapping("/info")
-    public MemberDto info(@RequestParam int mno){
-        log.info("member info info : {}", mno);
-        MemberDto memberDto = memberService.info(mno);
+    public MemberDto info(){
+        MemberDto memberDto = memberService.info();
         return memberDto;
     }
     //3. 회원정보 수정 [U]
@@ -70,9 +71,17 @@ public class MemberController {
     }
     
     // ------------------ 스프링 시큐리티 사용화 전 ------------------------
+    // 스프링 시큐리티를 쓰기 때문에 아래의 코드는 사용X
+/*    // 로그인
     @PostMapping("/login") //@Mapping이 다르면 URL는 같아도 된다.
     public boolean login(@RequestBody MemberDto memberDto){
         boolean result = memberService.login(memberDto);
         return result;
     }
+
+    // 로그아웃
+    @GetMapping("/logout")
+    public boolean logout(){
+        return memberService.logout();
+    }*/
 }

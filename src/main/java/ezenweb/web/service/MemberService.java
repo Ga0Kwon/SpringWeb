@@ -5,6 +5,12 @@ import ezenweb.web.domain.member.MemberEntity;
 import ezenweb.web.domain.member.MemberEntityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +20,25 @@ import java.util.Optional;
 
 @Service // 서비스 레이어 => 빈등록
 @Slf4j //로그
-public class MemberService {
+public class MemberService implements UserDetailsService {
+
+    // [ 스프링 시큐리티 적용했을 때 사용되는 로그인 메서드]
+    @Override
+    public UserDetails loadUserByUsername(String memail) throws UsernameNotFoundException {
+        //1. UserDetailService 인터페이스 구현
+        //2. LoadUserByUsername() 메서드 : 아이디 검증
+            // 패스워드 검증 [ 시큐리티 자동]
+
+        Optional<MemberEntity> entity = memberEntityRepository.findByMemail(memail);
+        if(entity.get() == null){
+            return null;
+        }
+        MemberDto dto = entity.get().toDto();
+        log.info("dto : " + dto);
+        //3. 검증 후 세션에 저장할 DTO 반환
+        return dto;
+    }
+
     //서비스는 매핑하는 것이 아니니까, @어노테이션 뺌
     //  @Transactional : entity가 setter을 쓴다 그러면 필수!
     @Autowired
@@ -26,55 +50,18 @@ public class MemberService {
     @Transactional
     // 1. 회원 가입
     public boolean write(MemberDto memberDto){
+
+        // 스프링 시큐리티에서 제공하는 암호화[사람이 이해하기 어렵고 컴퓨터는 이해할 수 있는 단어] 사용하기
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        log.info("비코더 암호화 사용 : " + passwordEncoder.encode("qwe"));
+        //입력받은 [DTO] 패스워드 암호화 해서 다시 DTO에 저장
+        memberDto.setMpassword(passwordEncoder.encode(memberDto.getMpassword()));
+        // Encoder : 암호화(특정 형식으로 변경) / decoder : 복호화(원본으로 되돌리기)
         MemberEntity entity = memberEntityRepository.save(memberDto.toEntity());
         if(entity.getMno() > 0 ){
             return true;
         }
         return false;
-    }
-
-    //5. 로그인 [시큐리티 사용 하기 전]
-    @Transactional
-    public boolean login(MemberDto memberDto){
-        //1. 이메일로 엔티티 찾기
-  /*      Optional<MemberEntity> entity = memberEntityRepository.findByMemail(memberDto.getMemail());
-        log.info("entity : "+ entity);
-
-        // 2. 패스워드 검증
-        if(entity.get().getMpassword().equals(memberDto.getMpassword())){
-            // == 스택 메모리 내 데이터 비교
-            // .equeals 힙 메모리 비교
-            // matches() : 문자열 주어진 패턴 포함 동일 여부 체크
-            //세션 사용 : 메서드 밖 필드에 @Autowired private HttpServletRequest request;
-            request.getSession().setAttribute("login", entity.get().getMno());
-            return true;
-        }*/
-
-        //2. 입력받은 이메일과 패스워드가 동일한지
-        Optional<MemberEntity> result = memberEntityRepository.findByMemailAndMpassword(memberDto.getMemail(), memberDto.getMpassword());
-        log.info("result : "+ result);
-        if(result.isPresent()){ //존재하면 로그인 성공이라는 말
-            request.getSession().setAttribute("login", result.get().getMno());
-            return true;
-        }
-        
-        return false;
-    }
-
-
-
-    @Transactional
-    //2. 회원정보
-    public MemberDto info(int mno){
-
-       //Optional : 포장지 [ null값을 참조하는 에러를 회피하기 위해 사용, 해당 Id(PK)에 값이 없을 수도 있음]
-       Optional<MemberEntity> entityOptional = memberEntityRepository.findById(mno);
-
-        if(entityOptional.isPresent()){ //포장안의 정보가 들어있으면
-            return entityOptional.get().toDto();
-        }
-
-        return null;
     }
 
     @Transactional //수정은 필수!!! [Commit]
@@ -107,4 +94,88 @@ public class MemberService {
         
         return false;
     }
+
+
+    @Transactional
+    //2. 회원정보 [세션에 존재하는 회원 번호]
+    public MemberDto info(){
+        // 1. 시큐리티 인증[로그인] 된 UserDetails 객체[세션]으로 관리 했을 때 [Spring]
+       // SecurityContextHolder() : 시큐리티 정보 저장소
+        //SecurityContextHolder().getContext() : 시큐리티 저장된 정보 호출
+        //SecurityContextHolder.getContext().getAuthentication(); : 인증 전체 정보 호출
+
+        log.info("Auth : " + SecurityContextHolder.getContext().getAuthentication());
+
+        // 인증된 회원의 정보 호출
+        log.info("Principal : " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+       Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+       if(o == null){ //로그인 안했다는 것
+           return null;
+       }
+       //인증 된 객체내 회원 정보[principal] 타입 변환
+        return (MemberDto) o; //MemberDt로 타입 변환 [부모(object) <-> 자식(MemberDto)]
+
+
+        // 일반 세션으로
+ /*       //이메일이 존재
+        String memail = (String)request.getSession().getAttribute("login");
+        System.out.println("이메일 찾는다 : " + memail);
+        if(memail != null){
+            MemberEntity entity = memberEntityRepository.findByMemail(memail).get();
+            return entity.toDto();
+        }*/
+        
+    }
+
+    // *** 로그인 [ 시큐리티 사용했을때]
+    // 시큐리티는 API [누군가 미리 만들어진 메서드 안에서 커스터마이징[수정]
+
+    //5. 로그인
+    /*@Transactional
+    public boolean login(MemberDto memberDto){
+        //1. 이메일로 엔티티 찾기
+        Optional<MemberEntity> entity = memberEntityRepository.findByMemail(memberDto.getMemail());
+        log.info("entity : "+ entity);
+
+        //2. 찾은 엔티티 안에는 암호화된 패스워드
+            // 엔티티 안에 있는 패스워드와 입력받은 패스워드와 비교
+        // 2. 패스워드 검증
+        //엔티티 안에 있는 입력받은 패스워드[안된 상태]와 패스워드[암호화된 상태] 비교
+        if(new BCryptPasswordEncoder().matches(memberDto.getMpassword(), entity.get().getMpassword())){
+            // == 스택 메모리 내 데이터 비교
+            // .equeals 힙 메모리 비교
+            // matches() : 문자열 주어진 패턴 포함 동일 여부 체크
+            //세션 사용 : 메서드 밖 필드에 @Autowired private HttpServletRequest request;
+            request.getSession().setAttribute("login", entity.get().getMemail());
+            return true;
+        }
+
+        //2. 입력받은 이메일과 패스워드가 동일한지
+        *//*
+        Optional<MemberEntity> result = memberEntityRepository.findByMemailAndMpassword(memberDto.getMemail(), memberDto.getMpassword());
+        log.info("result : "+ result);
+        if(result.isPresent()){ //존재하면 로그인 성공이라는 말
+            request.getSession().setAttribute("login", result.get().getMno());
+            return true;
+        }*//*
+
+        //3. 계정이 있는지 // 못씀
+    *//*    boolean result = memberEntityRepository.existsByMemailAndMpassword(memberDto.getMemail(), memberDto.getMpassword());
+        if(result == true){
+            request.getSession().setAttribute("login", memberDto.getMemail());
+            return true;
+        }*//*
+        return false;
+    }
+
+    //7. [세션에 존재하는 정보 제거] 로그아웃
+    @Transactional
+    public boolean logout(){
+        request.getSession().setAttribute("login", null);
+        return true;
+    }*/
+
+
 }

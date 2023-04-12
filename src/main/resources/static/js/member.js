@@ -20,7 +20,8 @@ function onSignup(){//회원가입
         }
     })
 }
-
+/*
+    // 시큐리티 사용하므로 아래 코드 사용X => 폼 전송 이용
 function onLogin(){ //로그인
     let info = {
         memail : document.querySelector(".memail").value,
@@ -35,8 +36,34 @@ function onLogin(){ //로그인
             success : function(data){
                 if(data == true){
                     alert('로그인 성공')
+                    location.href = "/"
                 }
             }
       })
 
+}
+*/
+
+function onUpdate(){ //회원 정보 수정
+    let info = {
+        mpassword : document.querySelector(".mpassword").value,
+        mphone : document.querySelector(".mphone").value,
+        mname : document.querySelector(".mname").value,
+        mrole : document.querySelector(".mrole").value
+    }
+
+    $.ajax({
+        url : "/member/info",
+        method : "put",
+        data : JSON.stringify(info),
+        success : function(data){
+            if(data == true){
+                location.href = "/"
+            }
+        }
+    })
+}
+
+function onDelete(){
+    document.querySelector(".etcDiv").innerHTML = `  비밀번호 입력 : <input type="text" name = "mpassword" class = "mpassword"/><br/>`;
 }

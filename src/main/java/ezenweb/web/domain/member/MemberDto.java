@@ -4,15 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 
+// 시큐리티 + 일반 DTO
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MemberDto {
+public class MemberDto implements UserDetails { //MemberService 의 loadUserByUsername메서드에서 UserDetails를 반환하기 위해
     //1. 회원번호
     private int mno;
     //2. 회원 아이디 [이메일]
@@ -39,5 +43,40 @@ public class MemberDto {
               .mphone(mphone)
               .mrole(mrole)
               .build();
+    }
+
+    @Override //인증 권한 반환
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override //패스워드 반환
+    public String getPassword() {
+        return this.mpassword;
+    }
+
+    @Override // 계정 반환
+    public String getUsername() {
+        return this.memail;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
