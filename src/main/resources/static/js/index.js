@@ -17,6 +17,7 @@ function onMember(){
     })
 }
 
+/*
 function logout(){
     $.ajax({
         url : "/member/logout",
@@ -28,4 +29,4 @@ function logout(){
             }
         }
     })
-}
+}*/
