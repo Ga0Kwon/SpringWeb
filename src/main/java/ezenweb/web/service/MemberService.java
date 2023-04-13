@@ -5,6 +5,8 @@ import ezenweb.web.domain.member.MemberEntity;
 import ezenweb.web.domain.member.MemberEntityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +18,10 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.lang.reflect.Member;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service // 서비스 레이어 => 빈등록
 @Slf4j //로그
@@ -28,15 +33,27 @@ public class MemberService implements UserDetailsService {
         //1. UserDetailService 인터페이스 구현
         //2. LoadUserByUsername() 메서드 : 아이디 검증
             // 패스워드 검증 [ 시큐리티 자동]
-
         Optional<MemberEntity> entity = memberEntityRepository.findByMemail(memail);
         if(entity.get() == null){
             return null;
         }
         MemberDto dto = entity.get().toDto();
+
+            // dto에 권한 넣어주기
+            // dto의 권한  public Collection<? extends GrantedAuthority> getAuthorities() {} : 자료형이 다르다
+        //1) 권한 목록 만들기
+        Set<GrantedAuthority> roleList = new HashSet<>();
+        //SimpleGrantedAuthority 권한명 = new SimpleGrantedAuthority("권한명");
+        //2) 권한 객체 만들기
+        SimpleGrantedAuthority user = new SimpleGrantedAuthority(entity.get().getMrole());
+        //3) 만든 권한 객체를 권한 목록[컬렉션]에 추가
+        roleList.add(user);
+        //4) UserDetails 에 권한 목록 대입
+        dto.setRolesList(roleList);
+
         log.info("dto : " + dto);
         //3. 검증 후 세션에 저장할 DTO 반환
-        return dto;
+        return dto; // UserDetials : 원본 데이터의 검증할 계정, 패스워드 포함
     }
 
     //서비스는 매핑하는 것이 아니니까, @어노테이션 뺌
@@ -48,7 +65,7 @@ public class MemberService implements UserDetailsService {
     private HttpServletRequest request;
 
     @Transactional
-    // 1. 회원 가입
+    // 1. 일반 회원 가입 [본 애플리케이션에서 가입한 회원]
     public boolean write(MemberDto memberDto){
 
         // 스프링 시큐리티에서 제공하는 암호화[사람이 이해하기 어렵고 컴퓨터는 이해할 수 있는 단어] 사용하기
@@ -57,6 +74,10 @@ public class MemberService implements UserDetailsService {
         //입력받은 [DTO] 패스워드 암호화 해서 다시 DTO에 저장
         memberDto.setMpassword(passwordEncoder.encode(memberDto.getMpassword()));
         // Encoder : 암호화(특정 형식으로 변경) / decoder : 복호화(원본으로 되돌리기)
+
+        // 등급 부여
+        memberDto.setMrole("user");
+
         MemberEntity entity = memberEntityRepository.save(memberDto.toEntity());
         if(entity.getMno() > 0 ){
             return true;
@@ -111,9 +132,12 @@ public class MemberService implements UserDetailsService {
 
        Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-       if(o == null){ //로그인 안했다는 것
+       if(o.equals("anonymousUser")){ //로그인 안했다는 것
            return null;
        }
+        //[Principal]
+        // 인증 실패시 : anonymousUser
+        // 인증 성공시 : 회원 DTO
        //인증 된 객체내 회원 정보[principal] 타입 변환
         return (MemberDto) o; //MemberDt로 타입 변환 [부모(object) <-> 자식(MemberDto)]
 

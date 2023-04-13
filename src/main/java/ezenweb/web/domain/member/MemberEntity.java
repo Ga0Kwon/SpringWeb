@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -31,7 +33,7 @@ public class MemberEntity extends BaseTime {
     //5. 회원 전화번호
     @Column
     private String mphone;
-    //6. 회원 등급
+    //6. 회원 등급 / 권한 명
     @Column
     private String mrole;
 

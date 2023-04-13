@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Set;
 
 // 시큐리티 + 일반 DTO
 @Data
@@ -27,27 +28,29 @@ public class MemberDto implements UserDetails { //MemberService 의 loadUserByUs
     private String mname;
     //5. 회원 전화번호
     private String mphone;
-    //6. 회원 등급
-    private String mrole;
-
+    //6. 회원 등급 / 권한 명
+    private String mrole; // [가입용]
+    
+    private Set<GrantedAuthority> rolesList; // 인증용
+    
     private LocalDateTime cdate; //등록 날짜/시간
     private LocalDateTime udate; //수정 날짜/시간
 
     //toEntity
     public MemberEntity toEntity(){ //저장용도
         return MemberEntity.builder()
-              .mno(mno)
-              .memail(memail)
-              .mpassword(mpassword)
-              .mname(mname)
-              .mphone(mphone)
-              .mrole(mrole)
+              .mno(this.mno)
+              .memail(this.memail)
+              .mpassword(this.mpassword)
+              .mname(this.mname)
+              .mphone(this.mphone)
+              .mrole(this.getMrole()) // 넣어야 DB처리가 가능하다.
               .build();
     }
 
     @Override //인증 권한 반환
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.rolesList;
     }
 
     @Override //패스워드 반환
