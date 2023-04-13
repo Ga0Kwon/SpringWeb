@@ -30,12 +30,13 @@ import java.util.*;
 @Service // 서비스 레이어 => 빈등록
 @Slf4j //로그
 public class MemberService implements UserDetailsService, OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+    private static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     // 가공된 정보를 얻기 위해 OAuth2UserService 서비스를 구현해줘야한다.
-    @Override
+    @Override // 토큰 결과 [JSON { 필드명 : 값, 필드명 : 값} vs Map{키 = 값, 키 = 값}
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         // !!! : OAuth2User.getAttributes() map<String, Object> 구조[키 : 값]
-
+        
         //1. 인증[로그인] 결과 토큰 확인
         OAuth2UserService oAuth2UserService = new DefaultOAuth2UserService();
 
@@ -49,6 +50,7 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         log.info("registrationId : " + registrationId);
 
+        // 인가 객체 [OAuth2User ----> MemberDto 통합DTo (일반 + oAuth)]
          MemberDto memberDto = new MemberDto();
          //4.
          String authUserInfo =  userRequest
@@ -70,6 +72,16 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
         rolesList.add(authority);
         memberDto.setRolesList(rolesList);
 
+        //DB 처리 [DB에 회원 가입; 첫 방문시에만 DB등록, 두번째 방문시 부터는 DB수정]
+        //1) DB 저장하기 전에 해당 이메일로 된 이메일 존재하는지 검사
+       Optional<MemberEntity> entity = memberEntityRepository.findByMemail(email);
+
+        if (!entity.isPresent()) {//첫 방문시
+            memberDto.setMrole("oauthuser");
+            memberEntityRepository.save(memberDto.toEntity());
+        }else{ // 두번째 방문 시 수정 처리
+            entity.get().setMname(name); //이메일은 바꿀일이 없기 때문에 이름만 수정
+        }
         return memberDto; //rolesList OAuth2를 구현했으니까 return 가능
     }
 
@@ -116,12 +128,10 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
     public boolean write(MemberDto memberDto){
 
         // 스프링 시큐리티에서 제공하는 암호화[사람이 이해하기 어렵고 컴퓨터는 이해할 수 있는 단어] 사용하기
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         log.info("비코더 암호화 사용 : " + passwordEncoder.encode("qwe"));
         //입력받은 [DTO] 패스워드 암호화 해서 다시 DTO에 저장
         memberDto.setMpassword(passwordEncoder.encode(memberDto.getMpassword()));
         // Encoder : 암호화(특정 형식으로 변경) / decoder : 복호화(원본으로 되돌리기)
-
         // 등급 부여
         memberDto.setMrole("user");
 
@@ -140,11 +150,11 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
         if(entityOptional.isPresent()){ //포장안의 정보가 들어있으면
             MemberEntity entity = entityOptional.get();
 
+            // 기존 값 그대로
+
             //setter을 이용한 수정
-            entity.setMrole(memberDto.getMrole());
             entity.setMname(memberDto.getMname());
             entity.setMphone(memberDto.getMphone());
-            entity.setMpassword(memberDto.getMpassword());
             
             return true;
         }
@@ -154,8 +164,8 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
     //4.회원 삭제
     public boolean delete(int mno){
         Optional<MemberEntity> entityOptional = memberEntityRepository.findById(mno);
-
-        if(entityOptional.isPresent()){ //포장안의 정보가 들어있으면
+        System.out.println("서비스에 mno 들어옴 : " + mno);
+        if(entityOptional.isPresent()){ //포장안의 정보가 들어 있고,
             memberEntityRepository.delete(entityOptional.get()); //삭제하려는 entity를 삭제
             return true;
         }
@@ -198,6 +208,49 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
             return entity.toDto();
         }*/
         
+    }
+
+    // 아이디 찾기
+    public String findId(MemberDto memberDto){
+        Optional<MemberEntity> optionalMemberEntity = memberEntityRepository.findByMnameAndMphone(memberDto.getMname(), memberDto.getMphone());
+
+        if(optionalMemberEntity.isPresent()){
+            return optionalMemberEntity.get().getMemail();
+        }
+        return null;
+    }
+    // 비밀번호를 만들기 위한 아스키 범위값
+    @Transactional
+    // 비밀번호 난수로 제공
+    public String findPw(MemberDto memberDto){
+        System.out.println("비밀번호 인증 전" + memberDto.toString());
+        boolean result = memberEntityRepository.existsByMemailAndMphone(memberDto.getMemail(), memberDto.getMphone());
+        String charStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^";
+
+        String newPwd = "";
+
+        if(result){
+            Optional<MemberEntity> memberEntityOptional = memberEntityRepository.findByMemail(memberDto.getMemail());
+            System.out.println("memberService 비밀번호 찾기 : "+ memberEntityOptional.get());
+
+            if(memberEntityOptional.isPresent()){
+                MemberEntity entity = memberEntityOptional.get();
+
+                for(int i = 0; i < 6; i++){
+                    Random random = new Random();
+                    //ranStr 문자열에서 0인덱스 ~ 마지막 인덱스의 난수 인덱스 만들기
+                    int index = random.nextInt(charStr.length()); //0번 인덱스부터 마지막 인덱스[인덱스를 난수로 가져옴]
+                    newPwd += charStr.charAt(index);
+
+                }
+                System.out.println("새로운 비밀번호 : " + newPwd);
+
+                entity.setMpassword(passwordEncoder.encode(newPwd));
+
+                return newPwd;
+            }
+        }
+        return newPwd;
     }
 
     // *** 로그인 [ 시큐리티 사용했을때]

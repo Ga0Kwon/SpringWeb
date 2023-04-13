@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Member;
@@ -39,6 +40,14 @@ public class MemberController {
 
     @GetMapping("/update")
     public Resource getUpdate(){return new ClassPathResource("templates/member/update.html");}
+
+    @GetMapping("/findId")
+    public Resource findId(){return new ClassPathResource("templates/member/findId.html");}
+
+
+    @GetMapping("/findPw")
+    public Resource findPw(){return new ClassPathResource("templates/member/findPw.html");}
+
     @Autowired
     MemberService memberService;
 
@@ -59,14 +68,38 @@ public class MemberController {
     @PutMapping("/info")
     public boolean update(@RequestBody MemberDto memberDto){
         log.info("member info update : {}", memberDto);
+        MemberDto dto =  memberService.info();
+        memberDto.setMno(dto.getMno());
         boolean result = memberService.update(memberDto);
         return result;
     }
     //4. 회원정보 탈퇴 [D]
     @DeleteMapping("/info")
-    public boolean delete(@RequestParam int mno){
-        log.info("member info delete : {}", mno);
-        boolean result =  memberService.delete(mno);
+    public boolean delete(@RequestParam String mpassword){
+        System.out.println("controller에 memberpassword 들어옴 : " + mpassword);
+        MemberDto dto =  memberService.info();
+        boolean result = false;
+
+        if(new BCryptPasswordEncoder().matches(mpassword, dto.getMpassword())){
+            result =  memberService.delete(dto.getMno());
+        }
+
+        return result;
+
+    }
+
+    //5. 아이디 찾기
+    @PostMapping("/find")
+    public String findId(@RequestBody MemberDto memberDto){
+        String result = memberService.findId(memberDto);
+        return result;
+    }
+    
+    //6. 비밀번호 찾기
+    @PutMapping("/find")
+    public String findPw(@RequestBody MemberDto memberDto){
+        System.out.println("비밀번호 찾기 memberDto: " + memberDto);
+        String result = memberService.findPw(memberDto);
         return result;
     }
     
