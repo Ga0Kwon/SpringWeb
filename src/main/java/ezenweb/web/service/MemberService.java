@@ -13,21 +13,67 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.lang.reflect.Member;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+//UserDetailsService : 일반 유저 서비스 구현 ---> loadUserByUsername 구현
+//OAuth2UserService : oauth2 유저 서비스 구현 ----> OAuth2 유저 서비스 구현 ---> loadUser 구현
 @Service // 서비스 레이어 => 빈등록
 @Slf4j //로그
-public class MemberService implements UserDetailsService {
+public class MemberService implements UserDetailsService, OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    // [ 스프링 시큐리티 적용했을 때 사용되는 로그인 메서드]
+    // 가공된 정보를 얻기 위해 OAuth2UserService 서비스를 구현해줘야한다.
+    @Override
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        // !!! : OAuth2User.getAttributes() map<String, Object> 구조[키 : 값]
+
+        //1. 인증[로그인] 결과 토큰 확인
+        OAuth2UserService oAuth2UserService = new DefaultOAuth2UserService();
+
+        log.info("OAuthService : " + oAuth2UserService.loadUser(userRequest));
+
+        //2. 서비스로 전달받은 정보 객체
+        OAuth2User authUser = oAuth2UserService.loadUser(userRequest);
+        log.info("회원 정보 authUser : " + authUser.getAttributes());
+
+        //3. 클라이언트 id 요청 [구글, 네이버, 카카오 인지 식별하기 위해]
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        log.info("registrationId : " + registrationId);
+
+         MemberDto memberDto = new MemberDto();
+         //4.
+         String authUserInfo =  userRequest
+                 .getClientRegistration()
+                     .getProviderDetails()
+                         .getUserInfoEndpoint()
+                              .getUserNameAttributeName();
+
+         log.info("authUserInfo : " + authUserInfo); //sub : 실제 회원의 식별 키
+        /*   Map<String, Object> authmap = authUser.getAttributes().get(authUserInfo);*/
+            // 구글의 이메일 호출
+        String email = (String) authUser.getAttributes().get("email");
+            // 구글의 이름 호출
+        String name = (String) authUser.getAttributes().get("name");
+        memberDto.setMemail(email);
+        memberDto.setMname(name);
+        Set<GrantedAuthority> rolesList = new HashSet<GrantedAuthority>();
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_oauthuser");
+        rolesList.add(authority);
+        memberDto.setRolesList(rolesList);
+
+        return memberDto; //rolesList OAuth2를 구현했으니까 return 가능
+    }
+
+    // [ 스프링 시큐리티 적용했을 때 사용되는 로그인 메서드] => 일반 로그인
     @Override
     public UserDetails loadUserByUsername(String memail) throws UsernameNotFoundException {
         //1. UserDetailService 인터페이스 구현

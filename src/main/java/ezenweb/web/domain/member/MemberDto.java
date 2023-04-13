@@ -6,18 +6,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 // 시큐리티 + 일반 DTO
+// 시큐리티[UserDetails] + 소셜 회원 [OAuth2User]
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MemberDto implements UserDetails { //MemberService 의 loadUserByUsername메서드에서 UserDetails를 반환하기 위해
+public class MemberDto implements UserDetails, OAuth2User { //MemberService 의 loadUserByUsername메서드에서 UserDetails를 반환하기 위해
+
     //1. 회원번호
     private int mno;
     //2. 회원 아이디 [이메일]
@@ -32,7 +36,8 @@ public class MemberDto implements UserDetails { //MemberService 의 loadUserByUs
     private String mrole; // [가입용]
     
     private Set<GrantedAuthority> rolesList; // 인증용
-    
+    private Map<String, Object> attribute; //Oauth2 회원의 소셜 회원 정보
+
     private LocalDateTime cdate; //등록 날짜/시간
     private LocalDateTime udate; //수정 날짜/시간
 
@@ -48,6 +53,7 @@ public class MemberDto implements UserDetails { //MemberService 의 loadUserByUs
               .build();
     }
 
+    /* -------------------------- USERDETAILS -------------------------- */
     @Override //인증 권한 반환
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.rolesList;
@@ -81,5 +87,16 @@ public class MemberDto implements UserDetails { //MemberService 의 loadUserByUs
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    /* -------------------------- OAuth2User -------------------------- */
+    @Override //Oauth2 회원 정보
+    public Map<String, Object> getAttributes() {
+        return this.attribute;
+    }
+
+    @Override //Oauth2  아이디
+    public String getName() {
+        return this.memail;
     }
 }

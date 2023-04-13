@@ -54,9 +54,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .usernameParameter("memail") // 로그인시 사용될 계정 아이디의 필드명
                 .passwordParameter("mpassword") //로그인시 사용될 계정 패스워드의 필드명
                 .and()
-                .logout()
-                .logoutRequestMatcher( new AntPathRequestMatcher("/member/logout")) //로그아웃 처리를 요청할 매핑 URL
-                .logoutSuccessUrl("/") // 로그아웃 성공했을 때 이동할 매핑 URL
-                .invalidateHttpSession(true); //세션 초기화x
-    }
+                    .logout()
+                        .logoutRequestMatcher( new AntPathRequestMatcher("/member/logout")) //로그아웃 처리를 요청할 매핑 URL
+                        .logoutSuccessUrl("/") // 로그아웃 성공했을 때 이동할 매핑 URL
+                        .invalidateHttpSession(true) //세션 초기화x
+                .and()
+                    .oauth2Login() // oauth2  로그인 => 소셜 로그인 쓰겠다.
+                    .defaultSuccessUrl("/") // 로그인 성공시 이동할 매핑 URL
+                    .userInfoEndpoint() // 스프링 시큐리티로 들어올 수 있도록 시큐리티 로그인 엔드포인트[종착점]
+                    .userService(memberService); //oauth2 서비스를 지원하는
+        }
 }
