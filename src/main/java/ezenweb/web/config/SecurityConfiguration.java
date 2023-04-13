@@ -29,6 +29,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         //super.configure(http); //super : 부모클래스 호출 => 이거 주석처리하면 첫 로그인 화면
         // 부모꺼 안써 => 사이트 열림
         http
+                // 권한에 따른 HTTP GET 요청 제한
+                .authorizeHttpRequests() // HTTP 인증 요청
+                    .antMatchers("/member/info/mypage")
+                        .hasRole("user") // 위 URL 패턴에 요청할 수 있는 권한명
+                    //토큰 (ROLE_user) : ROLE_ 제외한 권한명 작성 => 권한이 없을 경우 login페이지로 넘어감(자동)
+                    .antMatchers("/admin/**") // localhost:8080/admin/~~ 이하 페이지는 모두 제한
+                     .hasRole("admin") // URL가 /admin/포함하는 모든 페이지는 admin만 입장 가능하다.
+                .antMatchers("/board/write")
+                    .hasRole("user") // 글쓰기 페이지는 회원만 가능
+                .antMatchers("/**") //localhost:8080/~~ 이하 페이지는 권한해제
+                    .permitAll() // 권한 페이지=> 맨 밑에다가 넣어야하는 게 위에는 먹히고 남은 부분을 해제하기때문
+                .and()
                 .csrf() // 사이트간 요청 위조 [ post, put http 사용 불가능]
                     // 특정 매핑 URL csrf 무시
                     .ignoringAntMatchers("/member/info") //member/info 에 관련된 것은 모두 열림

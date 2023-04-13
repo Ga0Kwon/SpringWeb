@@ -44,8 +44,9 @@ public class MemberService implements UserDetailsService {
         //1) 권한 목록 만들기
         Set<GrantedAuthority> roleList = new HashSet<>();
         //SimpleGrantedAuthority 권한명 = new SimpleGrantedAuthority("권한명");
-        //2) 권한 객체 만들기
-        SimpleGrantedAuthority user = new SimpleGrantedAuthority(entity.get().getMrole());
+        //2) 권한 객체 만들기[DB 존재하는 권한명(ROLE_!!!) 으로]
+            // 권한 없을 경우 : ROLE_ANONYMOUS / 권한이 있을 경우 ROLE_권한명 : ROLE_admin, ROLE_user
+        SimpleGrantedAuthority user = new SimpleGrantedAuthority("ROLE_"+entity.get().getMrole());
         //3) 만든 권한 객체를 권한 목록[컬렉션]에 추가
         roleList.add(user);
         //4) UserDetails 에 권한 목록 대입

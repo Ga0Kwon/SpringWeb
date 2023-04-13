@@ -38,7 +38,7 @@ public class MemberEntity extends BaseTime {
     private String mrole;
 
     //toDto
-    public MemberDto toDto() { // 출력용도
+    public MemberDto toDto() { // 출력용도[userDetails에서 패스워드 등록할대 써야함.]
         return MemberDto.builder()
               .mno(this.mno)
               .memail(this.memail)
@@ -48,6 +48,7 @@ public class MemberEntity extends BaseTime {
               .mrole(this.mrole)
               .cdate(this.cdate)
               .udate(this.udate)
+                //userDetails에 권한 관련 정보가 있기때문에 굳이 role안넣어됨
               .build();
     }
 }
