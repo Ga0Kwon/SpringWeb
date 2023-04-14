@@ -258,7 +258,7 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
             if(memberEntityOptional.isPresent()){
                 MemberEntity entity = memberEntityOptional.get();
 
-                for(int i = 0; i < 6; i++){
+                for(int i = 0; i < 8; i++){
                     Random random = new Random();
                     //ranStr 문자열에서 0인덱스 ~ 마지막 인덱스의 난수 인덱스 만들기
                     int index = random.nextInt(charStr.length()); //0번 인덱스부터 마지막 인덱스[인덱스를 난수로 가져옴]
