@@ -164,6 +164,11 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
         return false;
     }
 
+    // 1-0 아이디 죽복 검사
+    public boolean checkId(String memail){
+        boolean result = memberEntityRepository.existsByMemail(memail);
+        return !result;
+    }
     @Transactional //수정은 필수!!! [Commit]
     //3. 화원 수정
     public boolean update(MemberDto memberDto){

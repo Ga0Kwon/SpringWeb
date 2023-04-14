@@ -2,6 +2,21 @@ console.log("member js 실행");
 
 onMember();
 
+function checkId(){
+    $.ajax({
+        url : "/member/find",
+        method : "get",
+        data : {"memail" : document.querySelector(".memail").value},
+        success : (r) =>{
+            if(r == false){
+                document.querySelector(".checkIdtxt").innerHTML = `중복된 아이디입니다.`;
+            }else{
+                document.querySelector(".checkIdtxt").innerHTML = `O`;
+            }
+        }
+    })
+}
+
 function onMember(){
     $.ajax({
         url : "/member/info",
@@ -33,6 +48,7 @@ function logout(){
 
 function onSignup(){//회원가입
     console.log("onSignup");
+    let checkTxt = document.querySelector(".checkIdtxt").innerHTML;
 
     let info = {
         memail : document.querySelector(".memail").value,
@@ -41,15 +57,25 @@ function onSignup(){//회원가입
         mphone : document.querySelector(".mphone").value
     }
 
-    $.ajax({
-        url : "/member/info",
-        method : "post",
-        data : JSON.stringify(info), // JSON.stringify(info) :JSON형식으로 받아야한다 (RequestBody)
-        contentType : "application/json",
-        success : function(data){
-            console.log(data);
-        }
-    })
+    if(checkTxt == 'O'){
+        $.ajax({
+                url : "/member/info",
+                method : "post",
+                data : JSON.stringify(info), // JSON.stringify(info) :JSON형식으로 받아야한다 (RequestBody)
+                contentType : "application/json",
+                success : function(data){
+                    console.log(data);
+                    if(data == true){
+                        alert('회원가입 성공')
+                    }
+                }
+            })
+    }else{
+        alert("중복된 아이디입니다. 다시 입력해주세요")
+        document.querySelector(".memail").value = ``;
+    }
+
+
 }
 /*
     // 시큐리티 사용하므로 아래 코드 사용X => 폼 전송 이용

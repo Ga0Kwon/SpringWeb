@@ -9,7 +9,8 @@
       <a href ="/">홈으로</a>
       <h3>회원 가입 페이지</h3>
       <form>
-            아이디[이메일] : <input type="text" name = "memail" class = "memail"/><br/>
+            아이디[이메일] : <input onkeyup="checkId()" type="text" name = "memail" class = "memail"/>
+            <span class = "checkIdtxt"></span><br/>
             비밀번호 : <input type="text" name = "mpassword" class = "mpassword"/><br/>
             전화번호 : <input type="text" name = "mphone" class = "mphone"/><br/>
             이름 : <input type="text" name = "mname" class = "mname"/><br/>

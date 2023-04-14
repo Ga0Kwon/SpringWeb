@@ -102,6 +102,14 @@ public class MemberController {
         String result = memberService.findPw(memberDto);
         return result;
     }
+
+    //8. 아이디 중복 검사
+    @GetMapping("/find")
+    public boolean findId(@RequestParam String memail){
+        System.out.println("아이디들어오나?" + memail);
+        boolean result = memberService.checkId(memail);
+        return result;
+    }
     
     // ------------------ 스프링 시큐리티 사용화 전 ------------------------
     // 스프링 시큐리티를 쓰기 때문에 아래의 코드는 사용X
