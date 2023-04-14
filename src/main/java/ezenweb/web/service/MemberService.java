@@ -46,9 +46,33 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
         OAuth2User authUser = oAuth2UserService.loadUser(userRequest);
         log.info("회원 정보 authUser : " + authUser.getAttributes());
 
-        //3. 클라이언트 id 요청 [구글, 네이버, 카카오 인지 식별하기 위해]
+        //3. 클라이언트 id 식별 [ 응답된 JSON 구조 다르기 때문에 클라이언트ID별(구글vs카카오vs네이버)로 처리
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         log.info("registrationId : " + registrationId);
+
+        String email = null;
+        String name = null;
+        //oAtuth2User.getAttributes() map<String, Object> 구조
+        if(registrationId.equals("kakao")){ //카카오
+            Map<String, Object> kakao_account =  (Map<String, Object>)authUser.getAttributes().get("kakao_account");
+            Map<String, Object> profile = (Map<String, Object>)kakao_account.get("profile");
+
+            email = (String) kakao_account.get("email");
+            name = (String) profile.get("nickname");
+
+            log.info("카카오 계정 : " + kakao_account);
+        }else if(registrationId.equals("naver")){ //네이버
+            Map<String, Object> response = (Map<String, Object>)authUser.getAttributes().get("response");
+
+            email = (String) response.get("email");
+            name = (String) response.get("nickname");
+            log.info("네이버 계정 : " + response);
+        }else if(registrationId.equals("google")){ //구글
+            email = (String) authUser.getAttributes().get("email");
+            // 구글의 이름 호출
+            name = (String) authUser.getAttributes().get("name");
+
+        }
 
         // 인가 객체 [OAuth2User ----> MemberDto 통합DTo (일반 + oAuth)]
          MemberDto memberDto = new MemberDto();
@@ -59,16 +83,14 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
                          .getUserInfoEndpoint()
                               .getUserNameAttributeName();
 
+        memberDto.setMemail(email);
+        memberDto.setMname(name);
          log.info("authUserInfo : " + authUserInfo); //sub : 실제 회원의 식별 키
         /*   Map<String, Object> authmap = authUser.getAttributes().get(authUserInfo);*/
             // 구글의 이메일 호출
-        String email = (String) authUser.getAttributes().get("email");
-            // 구글의 이름 호출
-        String name = (String) authUser.getAttributes().get("name");
-        memberDto.setMemail(email);
-        memberDto.setMname(name);
+
         Set<GrantedAuthority> rolesList = new HashSet<GrantedAuthority>();
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_oauthuser");
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_user");
         rolesList.add(authority);
         memberDto.setRolesList(rolesList);
 
