@@ -87,6 +87,9 @@ public class BoardService {
             //2) 로그인된 회원 엔티티에 생성된 게시물 엔티티 등록
         memberEntity.get().getBoardEntityList().add(boardEntity);
 
+        /* ------------------------- --------------------------- */
+        log.info(boardEntity.toString());
+
         return true;
     }
 
