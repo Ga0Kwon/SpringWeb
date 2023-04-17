@@ -1,5 +1,6 @@
 package ezenweb.web.config;
 
+import ezenweb.web.controller.AuthSuccessFailHandler;
 import ezenweb.web.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private AuthSuccessFailHandler authSuccessFailHandler;
+
     // 인증[로그인] 관련 보안 담당 메서드
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -36,32 +41,38 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     //토큰 (ROLE_user) : ROLE_ 제외한 권한명 작성 => 권한이 없을 경우 login페이지로 넘어감(자동)
                     .antMatchers("/admin/**") // localhost:8080/admin/~~ 이하 페이지는 모두 제한
                      .hasRole("admin") // URL가 /admin/포함하는 모든 페이지는 admin만 입장 가능하다.
-                .antMatchers("/board/write")
-                    .hasRole("user") // 글쓰기 페이지는 회원만 가능
+                //.antMatchers("/board/write")
+                //    .hasRole("user") // 글쓰기 페이지는 회원만 가능
                 .antMatchers("/**") //localhost:8080/~~ 이하 페이지는 권한해제
                     .permitAll() // 권한 페이지=> 맨 밑에다가 넣어야하는 게 위에는 먹히고 남은 부분을 해제하기때문
                 .and()
                 .csrf() // 사이트간 요청 위조 [ post, put http 사용 불가능]
+                //.disable() //모든 http csrf 해제
                     // 특정 매핑 URL csrf 무시
                     .ignoringAntMatchers("/member/info") //member/info 에 관련된 것은 모두 열림
                     .ignoringAntMatchers("/member/login") // 로그인도 열어둠
                     .ignoringAntMatchers("/member/find") // 아이디 찾기 비번 찾기 열어둠
+                    .ignoringAntMatchers("/board/write")
+                    .ignoringAntMatchers("/board/category/write")
                 .and() // 기능 추가/구분할때 사용되는 메서드
                 .formLogin()
                     .loginPage("/member/login") // 로그인으로 사용될 페이지 매핑 URL[어떤 페이지에서 로그인하는지]
                     .loginProcessingUrl("/member/login") // 로그인을 처리할 매핑 URL
-                    .defaultSuccessUrl("/") // 로그인 성공했을 때 이동하는 매핑 URL[성공시 index페이지]
-                    .failureUrl("/member/login") //로그인실패했을때 이동할 매핑 URL [실패시 제자리]
-                .usernameParameter("memail") // 로그인시 사용될 계정 아이디의 필드명
-                .passwordParameter("mpassword") //로그인시 사용될 계정 패스워드의 필드명
+                    //.defaultSuccessUrl("/") // 로그인 성공했을 때 이동하는 매핑 URL[성공시 index페이지]
+                    .successHandler(authSuccessFailHandler)
+                    //.failureUrl("/member/login") //로그인실패했을때 이동할 매핑 URL [실패시 제자리]
+                    .failureHandler(authSuccessFailHandler) // ���그인�����
+                    .usernameParameter("memail") // 로그인시 사용될 계정 아이디의 필드명
+                    .passwordParameter("mpassword") //로그인시 사용될 계정 패스워드의 필드명
                 .and()
                     .logout()
                         .logoutRequestMatcher( new AntPathRequestMatcher("/member/logout")) //로그아웃 처리를 요청할 매핑 URL
                         .logoutSuccessUrl("/") // 로그아웃 성공했을 때 이동할 매핑 URL
                         .invalidateHttpSession(true) //세션 초기화x
                 .and()
-                    .oauth2Login() // oauth2  로그인 => 소셜 로그인 쓰겠다. /oauth2/authorization/클라이언트로 되어있는 것들은 다 여기서 채감
-                    .defaultSuccessUrl("/") // 로그인 성공시 이동할 매핑 URL
+                    .oauth2Login()  // oauth2  로그인 => 소셜 로그인 쓰겠다. /oauth2/authorization/클라이언트로 되어있는 것들은 다 여기서 채감
+                    //.defaultSuccessUrl("/") // 로그인 성공시 이동할 매핑 URL
+                    .successHandler(authSuccessFailHandler)
                     .userInfoEndpoint() // 스프링 시큐리티로 들어올 수 있도록 시큐리티 로그인 엔드포인트[종착점]
                     .userService(memberService); //oauth2 서비스를 지원하는
         }

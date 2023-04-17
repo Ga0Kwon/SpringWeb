@@ -16,7 +16,7 @@ function checkId(){
         }
     })
 }
-
+//로그인 정보 요청
 function onMember(){
     $.ajax({
         url : "/member/info",
@@ -31,6 +31,7 @@ function onMember(){
         }
     })
 }
+
 
 /*
 function logout(){
@@ -76,6 +77,23 @@ function onSignup(){//회원가입
     }
 
 
+}
+//로그인
+function onLogin(){
+    let loginform = document.querySelectorAll(".loginForm")[0];
+
+    let loginFormData = new FormData(loginform);
+
+    $.ajax({ //폼전송[시큐리티 formLogin() 사용하기 때문에]
+        url : "/member/login",
+        method : "post",
+        data : loginFormData,
+        contentType : false, //폼전송할때 multipart
+        processData : false, //폼전송할때 multipart
+        success : function(r) {
+            console.log(r);
+        }
+    })
 }
 /*
     // 시큐리티 사용하므로 아래 코드 사용X => 폼 전송 이용

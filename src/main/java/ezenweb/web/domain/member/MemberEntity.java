@@ -1,10 +1,14 @@
 package ezenweb.web.domain.member;
 
 import ezenweb.web.domain.BaseTime;
+import ezenweb.web.domain.board.BoardEntity;
+import ezenweb.web.domain.board.ReplyEntity;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter@Setter@ToString
@@ -34,6 +38,16 @@ public class MemberEntity extends BaseTime {
     @Column
     private String mrole;
 
+    //게시물 목록 내가 쓴 게시물
+    @OneToMany(mappedBy = "memberEntity")
+    @Builder.Default
+    private List<BoardEntity> boardEntityList = new ArrayList<>();
+
+    // 댓글 목록 = 내가 쓴 댓글
+    @OneToMany(mappedBy = "memberEntity")
+    @ToString.Exclude
+    private List<ReplyEntity> replyEntityList = new ArrayList<>();
+    
     //toDto
     public MemberDto toDto() { // 출력용도[userDetails에서 패스워드 등록할대 써야함.]
         return MemberDto.builder()
