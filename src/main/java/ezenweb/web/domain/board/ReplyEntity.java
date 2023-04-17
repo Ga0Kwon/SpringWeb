@@ -24,7 +24,7 @@ public class ReplyEntity {
     @ToString.Exclude
     private BoardEntity boardEntity; //게시물 fk
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "mno")
     @ToString.Exclude
     private MemberEntity memberEntity; //작성자  fk
