@@ -170,7 +170,10 @@ function getDetailBoard(bno){
                             <td>${r.memail}</td>
                             <td>${r.bdate}</td>
                             <td>${r.bview}</td>
-                            <td><button onclick="deleteBoard(${r.bno})">삭제</button></td>
+                            <td>
+                                <button onclick="deleteBoard(${r.bno})">삭제</button>
+                                <button onclick="updateBoard(${r.bno})">수정</button>
+                            </td>
                         </tr>`
             document.querySelector(".boardDetailsDiv").innerHTML = html;
         }
@@ -203,6 +206,10 @@ function deleteBoard(bno){
             }
         }
     })
+}
+//게시물 수정
+function updateBoard(bno){
+    console.log(bno + "수정")
 }
 
 /*
