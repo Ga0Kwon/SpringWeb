@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,11 +78,11 @@ public class MemberController {
     @DeleteMapping("/info")
     public boolean delete(@RequestParam String mpassword){
         System.out.println("controller에 memberpassword 들어옴 : " + mpassword);
-        MemberDto dto =  memberService.info();
+        MemberDto memberDto = (MemberDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         boolean result = false;
 
-        if(new BCryptPasswordEncoder().matches(mpassword, dto.getMpassword())){
-            result =  memberService.delete(dto.getMno());
+        if(new BCryptPasswordEncoder().matches(mpassword, memberDto.getMpassword())){
+            result =  memberService.delete(memberDto.getMno());
         }
 
         return result;
