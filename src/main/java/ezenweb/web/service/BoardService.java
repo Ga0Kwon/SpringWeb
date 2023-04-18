@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -97,6 +99,21 @@ public class BoardService {
     public List<BoardDto> myboards(){
         log.info("service myboards");
         return null;
+    }
+
+    //4. 카테고리 출력
+    public Map<Integer, String> categoryList(){
+        List<CategoryEntity> categoryEntities = categoryEntityRepository.findAll();
+
+        //1. Dto 또는 Map으로 형변환
+        // List<엔티티> ---------> Map
+        Map<Integer, String> map = new HashMap<>();
+
+        categoryEntities.forEach((e) -> {
+            map.put(e.getCno(), e.getCname());
+        });
+
+        return map;
     }
 
 }

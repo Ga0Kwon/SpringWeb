@@ -41,8 +41,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     //토큰 (ROLE_user) : ROLE_ 제외한 권한명 작성 => 권한이 없을 경우 login페이지로 넘어감(자동)
                     .antMatchers("/admin/**") // localhost:8080/admin/~~ 이하 페이지는 모두 제한
                      .hasRole("admin") // URL가 /admin/포함하는 모든 페이지는 admin만 입장 가능하다.
-                //.antMatchers("/board/write")
-                //    .hasRole("user") // 글쓰기 페이지는 회원만 가능
+                .antMatchers("/board/**") //회원제 게시판 => 회원만 가능
+                    .hasRole("user") // 글쓰기 페이지는 회원만 가능
                 .antMatchers("/**") //localhost:8080/~~ 이하 페이지는 권한해제
                     .permitAll() // 권한 페이지=> 맨 밑에다가 넣어야하는 게 위에는 먹히고 남은 부분을 해제하기때문
                 .and()

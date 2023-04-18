@@ -4,9 +4,12 @@ import ezenweb.web.domain.board.BoardDto;
 import ezenweb.web.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -14,12 +17,27 @@ import java.util.List;
 public class BoardController {
     @Autowired
     private BoardService boardService;
+    /* -------------------------- View 반환 -------------------------- */
+    @GetMapping("")
+    public Resource index(){
+        return new ClassPathResource("templates/board/list.html");
+    }
+    /* -------------------------- Model 반환 -------------------------- */
 
     //1. 카테고리 등록 
     @PostMapping("/category/write")
     public boolean categoryWrite(@RequestBody BoardDto boardDto) {
         log.info("categoryWrite" + boardDto);
         boolean result = boardService.categoryWrite(boardDto);
+        return result;
+    }
+
+    //2. 카테고리 출력 [반환타입 : {cno : cname, cno : cname}
+        //List {값, 값, 값,값}
+        //Map{키 : 값, 키 : 값, 키 : 값}
+    @GetMapping("/category/list")
+    public Map<Integer, String> categoryList(){
+        Map<Integer, String> result = boardService.categoryList();
         return result;
     }
 
@@ -37,4 +55,5 @@ public class BoardController {
         List<BoardDto> boardDtoList = boardService.myboards();
         return boardDtoList;
     }
+
 }

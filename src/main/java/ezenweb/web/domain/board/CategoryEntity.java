@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity@Table(name = "bcategory")
+@Entity@Table(name = "category")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +17,7 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int cno;
 
-    @Column
+    @Column( name = "cname" , nullable = true )
     private String cname;
 
     // 양방향
