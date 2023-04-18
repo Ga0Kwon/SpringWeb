@@ -114,6 +114,33 @@ function getBoard(cno){
         }
     })
 }
+//6. 내가 작성한 (로그인 되어 있는 가정) 게시물
+function myBoard(){
+    $.ajax({
+            url : "/board/myboards",
+            method : "GET",
+            success : (r) => {
+                console.log(r);
+                let html = `<tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>작성일</th>
+                                <th>조회수</th>
+                            </tr>`
+                r.forEach((o) => {
+                    html += `<tr>
+                                <td>${o.bno}</td>
+                                <td>${o.btitle}</td>
+                                <td>${o.memail}</td>
+                                <td>${o.bdate}</td>
+                                <td>${o.bview}</td>
+                            </tr>`
+                })
+                document.querySelector(".boardListBox").innerHTML = html;
+            }
+    })
+}
 /*
     해당 변수의 자료형 확인 prototype
     Array : forEach() 가능

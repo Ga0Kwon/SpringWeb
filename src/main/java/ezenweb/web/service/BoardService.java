@@ -102,8 +102,20 @@ public class BoardService {
     //3. 내가 쓴 게시물 출력
     @Transactional
     public List<BoardDto> myboards(){
-        log.info("service myboards");
-        return null;
+        // 1. 로그인 인증 세션 호출 ---> Dto 강제 형변환
+        MemberDto memberDto = (MemberDto)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            // 일반 회원 : 모든 정보 | oauth회원 : email, mname, rol만 있음
+        //2. 회원 엔티티 찾기
+        MemberEntity entity = memberEntityRepository.findByMemail(memberDto.getMemail()).get();
+
+        //3.
+        List<BoardDto> list = new ArrayList<>();
+        entity.getBoardEntityList().forEach((e) -> {
+            list.add(e.toDto());
+        });
+        
+        return list;
     }
 
     //4. 카테고리 출력
