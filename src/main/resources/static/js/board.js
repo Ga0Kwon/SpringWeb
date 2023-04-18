@@ -73,6 +73,7 @@ function setBoard(){
                 alert('게시물이 등록되었습니다.')
                 document.querySelector(".btitle").value = ''
                 document.querySelector(".bcontent").value = ''
+                getBoard(selectCno)
             }else if(r == 1){
                 alert('알 수 없는 카테고리입니다.')
             }else if(r == 2){
@@ -101,7 +102,7 @@ function getBoard(cno){
                             <th>조회수</th>
                         </tr>`
             r.forEach((o) => {
-                html += `<tr>
+                html += `<tr onclick="getDetailBoard(${o.bno})">
                             <td>${o.bno}</td>
                             <td>${o.btitle}</td>
                             <td>${o.memail}</td>
@@ -129,7 +130,7 @@ function myBoard(){
                                 <th>조회수</th>
                             </tr>`
                 r.forEach((o) => {
-                    html += `<tr>
+                    html += `<tr onclick="getDetailBoard(${o.bno})">
                                 <td>${o.bno}</td>
                                 <td>${o.btitle}</td>
                                 <td>${o.memail}</td>
@@ -141,6 +142,69 @@ function myBoard(){
             }
     })
 }
+
+function getDetailBoard(bno){
+    console.log(bno + "상세보기")
+    $.ajax({
+        url : "/board/details",
+        method : "GET",
+        data : {"bno" : bno},
+        success : (r) => {
+             console.log(r);
+            let html = `<tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>내용</th>
+                            <th>카테고리</th>
+                            <th>작성자</th>
+                            <th>작성일</th>
+                            <th>조회수</th>
+                            <th>비고</th>
+                        </tr>`
+
+                html += `<tr>
+                            <td>${r.bno}</td>
+                            <td>${r.btitle}</td>
+                            <td>${r.bcontent}</td>
+                            <td>${r.cname}</td>
+                            <td>${r.memail}</td>
+                            <td>${r.bdate}</td>
+                            <td>${r.bview}</td>
+                            <td><button onclick="deleteBoard(${r.bno})">삭제</button></td>
+                        </tr>`
+            document.querySelector(".boardDetailsDiv").innerHTML = html;
+        }
+    })
+}
+
+function deleteBoard(bno){
+    $.ajax({
+        url : "/board/details",
+        method : "DELETE",
+        data : {"bno" : bno},
+        success : (r) => {
+            if(r == 0){
+                alert('삭제 성공')
+                getBoard(0)
+                document.querySelector(".boardDetailsDiv").innerHTML = `<tr>
+                                                                           <th>번호</th>
+                                                                           <th>제목</th>
+                                                                           <th>내용</th>
+                                                                           <th>카테고리</th>
+                                                                           <th>작성자</th>
+                                                                           <th>작성일</th>
+                                                                           <th>조회수</th>
+                                                                           <th>비고</th>
+                                                                       </tr>`
+            }else if (r == 1){
+                alert('삭제할 수 없는 게시물입니다')
+            }else if(r == 2){
+                alert('삭제 권한이 없습니다. 자기 게시물만 삭제해주세요.')
+            }
+        }
+    })
+}
+
 /*
     해당 변수의 자료형 확인 prototype
     Array : forEach() 가능

@@ -158,4 +158,27 @@ public class BoardService {
         }
     }
 
+    @Transactional
+    public BoardDto getDetailBoard(int bno){
+        return boardEntityRepository.findById(bno).get().toDto();
+
+    }
+
+    @Transactional
+    public int deleteBoard(int bno){
+        MemberDto memberDto = (MemberDto)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Optional<BoardEntity> optionalBoard = boardEntityRepository.findById(bno);
+        System.out.println("서비스에 삭제 board_bno 들어옴 : " + bno);
+        if(optionalBoard.isPresent()){ //포장안의 정보가 들어 있고,
+            if(memberDto.getMemail().equals(optionalBoard.get().getMemberEntity().getMemail())){
+                boardEntityRepository.delete(optionalBoard.get()); //삭제하려는 entity를 삭제
+                return 0;
+            }else{
+                return 2; //삭제할 권한이 없을 경우
+            }
+        }
+        return 1; //해당 게시물 정보가 없을 경우
+    }
+
 }

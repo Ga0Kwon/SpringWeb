@@ -72,4 +72,18 @@ public class BoardController {
         return result;
     }
 
+    @GetMapping("/details")
+    public BoardDto getDetailBoard(@RequestParam int bno){
+        System.out.println("getDetailBoard bno : " + bno);
+        BoardDto result = boardService.getDetailBoard(bno);
+        return result;
+    }
+
+    @DeleteMapping("/details")
+    public int deleteBoard(@RequestParam int bno){
+        System.out.println("getDetailBoard bno : " + bno);
+        int result = boardService.deleteBoard(bno);
+        return result;
+    }
+
 }
