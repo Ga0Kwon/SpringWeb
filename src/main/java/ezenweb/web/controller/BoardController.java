@@ -1,5 +1,6 @@
 package ezenweb.web.controller;
 
+import ezenweb.example.day06.객체관계.Board;
 import ezenweb.web.domain.board.BoardDto;
 import ezenweb.web.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
@@ -43,17 +44,26 @@ public class BoardController {
 
     //2. 게시물 쓰기
     @PostMapping("/write")
-    public boolean write(@RequestBody BoardDto boardDto){
+    public byte write(@RequestBody BoardDto boardDto){
         log.info("BoardDto write" + boardDto);
-        boolean result = boardService.write(boardDto);
+        byte result = boardService.write(boardDto);
         return result;
     }
-    
+
+
     //3. 내가 쓴 게시물 출력
     @GetMapping("/myboards")
     public List<BoardDto> myboards(){
         List<BoardDto> boardDtoList = boardService.myboards();
         return boardDtoList;
+    }
+
+    //4. 카테고리별 게시물 출력
+    @GetMapping("/list")
+    public List<BoardDto> list(@RequestParam int cno){
+        System.out.println("board list cno : " + cno);
+        List<BoardDto> result = boardService.list(cno);
+        return result;
     }
 
 }

@@ -1,6 +1,7 @@
 package ezenweb.web.domain.board;
 
 import ezenweb.example.day06.객체관계.Board;
+import ezenweb.web.domain.BaseTime;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryEntity {
+public class CategoryEntity extends BaseTime {
+    // 작성일, 수정일 BaseTime 클래스를 상속받아 사용.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int cno;

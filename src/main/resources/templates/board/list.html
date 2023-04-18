@@ -5,6 +5,8 @@
     <title>Title</title>
 </head>
 <body>
+    <a href = "/">홈으로</a>
+
     <div>
         <h6>카테고리 등록</h6>
         <input type = "text" class = "cname">
@@ -13,6 +15,16 @@
     <div>
         <h6>카테고리 목록</h6>
         <div class = "categoryListBox"></div>
+    </div>
+    <div>
+        <h6>게시물 쓰기</h6>
+        <input type = "text" class = "btitle">
+        <input type = "text" class = "bcontent">
+        <button onclick="setBoard()" type = "button">게시물 등록</button>
+    </div>
+    <div>
+        <h6>게시물 목록</h6>
+        <table class = "boardListBox"></table>
     </div>
 </body>
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script> <!--jquery-->
