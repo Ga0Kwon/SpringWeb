@@ -21,6 +21,6 @@
 import React from 'react'
 
 function Book() {
-    return (<div>처음 하는 react compontent </div>)
+    return (<><div>처음 하는 react compontent </div></>)
 }
 export default Book
