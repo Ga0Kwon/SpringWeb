@@ -11,6 +11,9 @@ import Product from './example/excomponent/Product';
 import ProductList from './example/excomponent/ProductList';
 import Clock from './example/excomponent/Clock';
 
+import Comment from './example/ex2css/Comment';
+import CommentList from './example/ex2css/CommentList';
+
 //1. HTML 에 존재하는 div 가져오기 [document.getElementById('root')]
 //2. ReactDOM.createRoot(해당 div[엘리먼트]) : 해당 div를 react root로 사용하여 root 객체 생성
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -21,13 +24,18 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 //1초마다 해당 코드 실행 : setInterval(() => {}, 1000)
 
-setInterval(() => {
+/*setInterval(() => {
     root.render(
           <React.StrictMode>
            <Clock />
           </React.StrictMode>
-    )}, 1000)
+    )}, 1000)*/
 
+root.render(
+  <React.StrictMode>
+   <CommentList/>
+  </React.StrictMode>
+);
 
 /* ------------------------------- vs. ---------------------------*/
 // react 를 사용하기 전에 직접 렌더링
