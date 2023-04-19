@@ -14,6 +14,8 @@ import Clock from './example/excomponent/Clock';
 import Comment from './example/ex2css/Comment';
 import CommentList from './example/ex2css/CommentList';
 
+import AppTodo from './example/exBook/AppTodo';
+
 //1. HTML 에 존재하는 div 가져오기 [document.getElementById('root')]
 //2. ReactDOM.createRoot(해당 div[엘리먼트]) : 해당 div를 react root로 사용하여 root 객체 생성
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -33,7 +35,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-   <CommentList/>
+   <AppTodo/>
   </React.StrictMode>
 );
 
