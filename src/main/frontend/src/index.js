@@ -36,8 +36,8 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
     )}, 1000)*/
 
 root.render(
-  <React.StrictMode>
-   <Hook2 />
+  <React.StrictMode> {/*try/catch같은 건데 예외를 찾으면서 Hook2를 한번 실행함*/}
+   <AppTodo />
   </React.StrictMode>
 );
 

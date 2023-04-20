@@ -1,12 +1,14 @@
 // import styles from '../../App.css'
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import Todo from './Todo';
 
 import AddTodo from './AddTodo';
 
 import {List, Paper, Container} from '@mui/material';
+
+import axios from 'axios'; //npm install axios
 
 export default function AppTodo(props) {
     //1.
@@ -16,6 +18,18 @@ export default function AppTodo(props) {
 
        ] //array
     )
+  //컴포넌트가 실행될 때 한번 이벤트 발생
+   useEffect (() => {
+        // ajax : jquery 설치가 필요
+        // fetch : 리액트 전송 비동기 통신 함수 [내장]
+        // axios : 리액트 외부 라이브러리 [ 설치 필요 ] JSON 통신 기본 값
+        //data : JSON.stringfy() => 안해도 됨.
+        axios.get("http://localhost:8080/todo").then(r => {
+            console.log(r)
+        })
+   }, [])
+
+
 
     //2. items에 새로운 item을 등록하는 함수
     const addItem = (item) => { //함수로부터 매개변수로 전달받은 item
