@@ -14,8 +14,6 @@ import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 //=> mui 를 더 많이 쓴다.
 
 
-
-
 export default function Todo(props) {
 
     //1. Hook 상태관리 useState
@@ -29,11 +27,52 @@ export default function Todo(props) {
         deleteItem(items);
     }
 
+    // 수정 함수 가져오기
+    let editItem = props.updateItem;
+
+    //4. readOnly = true 초기화가 된 필드/변수와 해당 필드르 수정할 수 있는 함수 setReadOnly[배열]
+    const [readOnly, setReadOnly] = useState(true);
+    //vs.
+    /*let readOnly = true;*/
+
+    //5. 읽기모드 해제
+    const turnOffReadOnly = () => {
+        console.log("turnOffReadOnly")
+        setReadOnly(false); // readOnly가 true이면 읽기모드(수정 불가능), false이면 읽기모드해제(수정가능)
+    }
+
+    //6. 엔터키 눌렀을 때 -> 수정 금지
+    const turnOnReadOnly = (e) => {
+        if(e.key === "Enter" || e.keyCode === 13){
+             console.log("turnOnReadOnly")
+             setReadOnly(true);
+        }
+    }
+
+    //7. 입력받은 값을 변경
+    const editEventHandler = (e) => {
+        console.log("editEventHandler")
+        items.title = e.target.value; // InputBase에 값이 변경될 때마다 상태 변수에 입력된 값 저장
+        editItem();
+    }
+
+    //8. 체크박스 업데이트
+    const checkboxEventHandler = (e) => {
+        items.done = e.target.checked;
+        editItem()
+    }
+
     return (<>
         <ListItem>
-            <Checkbox checked = {items.done}/>
+            <Checkbox
+            checked = {items.done}
+            onChange={checkboxEventHandler}
+            />
             <ListItemText>
-                <InputBase
+                <InputBase inputProps= {{readOnly : readOnly}}
+                    onClick = {turnOffReadOnly}
+                    onKeyDown = {turnOnReadOnly}
+                    onChange = {editEventHandler}
                     type ="text"
                     id = {items.id}
                     name = {items.name}

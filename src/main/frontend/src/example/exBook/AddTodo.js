@@ -31,7 +31,7 @@ export default function AddTodo(props) {
 
     //4. 엔터를 입력했을 때
     const enterKeyEventHandler = (e) =>{
-        if(e.key === 'Enter' || e.keyCode == 32){
+        if(e.key === 'Enter' || e.keyCode === 13){
             onButtonClick();
         }
     }

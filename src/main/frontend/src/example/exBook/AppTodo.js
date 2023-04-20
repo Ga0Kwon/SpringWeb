@@ -21,7 +21,7 @@ export default function AppTodo(props) {
     const addItem = (item) => { //함수로부터 매개변수로 전달받은 item
         item.id = "ID-" + items.length //ID 구성 [items.length 식으로 하면 문제가 있음]
         item.done = false; //체크 여부
-        setItems([...items, item]); // 기존 상태 items 메 item 추가
+        setItems([...items, item]); // 기존 상태 items 에 item 추가
         //item = {title : "입력받은값", id = "ID-배열길이", done : "기본값 false"}
         //setItems([...상태명, 값]); : ... 앞에 추가 : react의 규칙
     }
@@ -33,6 +33,17 @@ export default function AppTodo(props) {
         const newItems = items.filter(i => i.id !== item.id);
             // * 삭제할 id를 제외한 새로운 newItems 배열이 선언
         setItems([...newItems])
+
+        //상태 변수를 사용안했을 때
+/*        item.forEach((o, i) => {
+            if(o.id == item.id){
+                items.splice(i, 1);
+            }
+        })*/
+        // item에는 삭제할 item이 제거된 배열
+        // ?? 재 호출/다시 화면 새로고침??   =>    ddTodo() //X
+
+
 
         //JS 반복문 함수 제공
             //r = [1, 2, 3]
@@ -50,13 +61,22 @@ export default function AppTodo(props) {
 
     }
 
+    //4. 수정 함수
+    const editItem = () => {
+        setItems([...items]); //재 랜더링
+    }
+
     //반복문 이용한 Todo 컴포넌트 생성
     let TodoItems =
         /*<Paper style = "maign:16px;"> : HTML 방식*/
         <Paper style = {{margin:16}}>  {/*JSX의 style 속성 방법 중괄호 두번*/}
             <List>{
                 items.map((i) =>
-                   <Todo item ={i} key = {i.id} deleteItem = {deleteItem}/>
+                   <Todo
+                   item ={i}
+                   key = {i.id}
+                   deleteItem = {deleteItem}
+                   updateItem = {editItem}/>
                  )
                }
            </List>
