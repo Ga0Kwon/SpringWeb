@@ -10,6 +10,8 @@ import {ListItem, ListItemText, InputBase, Checkbox,
 //삭제 아이콘
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 
+import axios from 'axios'; //npm install axios
+
 //react Bootstrap 버전이 따로 있다.
 //=> mui 를 더 많이 쓴다.
 
@@ -21,7 +23,6 @@ export default function Todo(props) {
 
     //2. props로 전달된 삭제함수 변수로 이동
     const deleteItem = props.deleteItem;
-
     //3. 삭제함수 이벤트처리 핸들러
     const deleteEventHandler = () => {
         deleteItem(items);
@@ -47,6 +48,10 @@ export default function Todo(props) {
              console.log("turnOnReadOnly")
              setReadOnly(true);
         }
+        //엔터를 칠때 수정이 완료된 것.
+        axios.put("http://192.168.17.17:8080/todo",  items).then(r => {
+            editItem();
+        })
     }
 
     //7. 입력받은 값을 변경
@@ -59,7 +64,9 @@ export default function Todo(props) {
     //8. 체크박스 업데이트
     const checkboxEventHandler = (e) => {
         items.done = e.target.checked;
-        editItem()
+        axios.put("http://192.168.17.17:8080/todo",  items).then(r => {
+            editItem();
+        })
     }
 
     return (<>
