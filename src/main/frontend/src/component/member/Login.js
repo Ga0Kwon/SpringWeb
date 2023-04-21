@@ -5,7 +5,7 @@ import styles from '../../css/member/login.css'
 export default function Login(props){
 
     //로그인
-    const onLogin = () =>{
+    const onLogin = (e) =>{
         let loginform = document.querySelectorAll(".loginForm")[0];
 
         let loginFormData = new FormData(loginform);
@@ -17,8 +17,13 @@ export default function Login(props){
             if(r.data == false){
                 alert('동일한 회원정보가 없습니다.')
             }else{
-                alert('[로그인 성공] 환영합니다.')
-                window.location.href = "/";
+               //console.log(r.data)
+               alert('[로그인 성공] 환영합니다.')
+               //localhostStorage.setItem("key", value) : String타입
+               //localhostStorage : 브라우저가 모두 닫혀도 사라지지 않고, 도메인마다 따로 저장된다.
+               localStorage.setItem("login_token", JSON.stringify(r.data)); //JS 로컬 스토리지에 로그인 성공한 흔적 남기기
+
+               window.location.href = "/"; //location하면 r.data(로그인한 정보)사라짐 => Login 함수안에 있으니까 지역변수
             }
         })
     }
