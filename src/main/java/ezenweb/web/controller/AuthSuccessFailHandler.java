@@ -1,6 +1,8 @@
 package ezenweb.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ezenweb.example.day06.객체관계.Member;
+import ezenweb.web.domain.member.MemberDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
@@ -34,7 +36,8 @@ public class AuthSuccessFailHandler implements AuthenticationSuccessHandler, Aut
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("authentication success" + authentication.toString());
-        String json = objectMapper.writeValueAsString("로그인 성공했어");
+        MemberDto dto = (MemberDto)authentication.getPrincipal(); //로그인 성공한 객체
+        String json = objectMapper.writeValueAsString(dto); //objectMapper가 locldateTime형식을 지원하지 않는다.
 
         //AJAX에게 전달
         response.setCharacterEncoding("UTF-8");
@@ -47,7 +50,7 @@ public class AuthSuccessFailHandler implements AuthenticationSuccessHandler, Aut
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.info("authentication failure" + exception.toString());
-        String json = objectMapper.writeValueAsString("로그인 실패했어.");
+        String json = objectMapper.writeValueAsString(false);
         //AJAX에게 전달
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json"); //@responseBody 사용안할 때 직접 작용

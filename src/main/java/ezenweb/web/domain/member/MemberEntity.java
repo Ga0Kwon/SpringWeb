@@ -57,8 +57,8 @@ public class MemberEntity extends BaseTime {
               .mname(this.mname)
               .mphone(this.mphone)
               .mrole(this.mrole)
-              .cdate(this.cdate)
-              .udate(this.udate)
+              //.cdate(this.cdate)
+             // .udate(this.udate)
                 //userDetails에 권한 관련 정보가 있기때문에 굳이 role안넣어됨
               .build();
     }

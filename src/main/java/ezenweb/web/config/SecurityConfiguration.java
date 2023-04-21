@@ -3,12 +3,18 @@ package ezenweb.web.config;
 import ezenweb.web.controller.AuthSuccessFailHandler;
 import ezenweb.web.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration // Spring Bean에 등록 [MVC 컴포넌트]
 // WebSecurityConfigurerAdapter  : 시큐리티 설정 연결 클래스
@@ -77,5 +83,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .successHandler(authSuccessFailHandler)
                     .userInfoEndpoint() // 스프링 시큐리티로 들어올 수 있도록 시큐리티 로그인 엔드포인트[종착점]
                     .userService(memberService); //oauth2 서비스를 지원하는
-        }
+
+        http.cors(); //CORS 정책 사용.
+
+    } //configure
+    //import org.springframework.web.cors.CorsConfigurationSource;
+    //스프링 시큐리티에 CORS 정책 설정 [리액트가 요청 받기 위해]
+    @Bean //빈 등록
+    CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); //주소
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "PUT", "POST", "DELETE", "GET")); //http 메소드
+        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Cache-Control", "Authorization"));// http 설정
+        configuration.setAllowCredentials(true); //토큰 전송 할 수 있게
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }

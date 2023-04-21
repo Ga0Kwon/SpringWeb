@@ -75,8 +75,6 @@ function onSignup(){//회원가입
         alert("중복된 아이디입니다. 다시 입력해주세요")
         document.querySelector(".memail").value = ``;
     }
-
-
 }
 //로그인
 function onLogin(){
