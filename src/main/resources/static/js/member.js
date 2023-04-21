@@ -141,7 +141,6 @@ function onUpdate(){ //회원 정보 수정
 
 function checkPwd(){
     document.querySelector(".etcDiv").innerHTML = `  비밀번호 입력 : <input type="text" name = "mpassword" class = "mpassword"/><button type = "button" onclick="onDelete()">계정 삭제</button><br/>`;
-
 }
 
 function onDelete(){
