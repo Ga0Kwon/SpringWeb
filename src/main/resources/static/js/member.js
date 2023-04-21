@@ -25,7 +25,10 @@ function onMember(){
             console.log(r);
             if(r.mname != undefined){
               document.querySelector('.loginInfo').innerHTML = `${r.mname}님`;
-              document.querySelector('.logSign').innerHTML = `<a href ="/member/logout">로그아웃</a><a onClick = "checkPwd()">회원탈퇴</a><a href ="/member/update">회원 수정</a>`
+              document.querySelector('.logSign').innerHTML = `
+              <a href ="/member/logout">로그아웃</a>
+              <a onClick = "checkPwd()">회원탈퇴</a>
+              <a href ="/member/update">회원 수정</a>`
 
             }
         }

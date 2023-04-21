@@ -21,7 +21,10 @@ export default function Login(props){
                alert('[로그인 성공] 환영합니다.')
                //localhostStorage.setItem("key", value) : String타입
                //localhostStorage : 브라우저가 모두 닫혀도 사라지지 않고, 도메인마다 따로 저장된다.
-               localStorage.setItem("login_token", JSON.stringify(r.data)); //JS 로컬 스토리지에 로그인 성공한 흔적 남기기
+               //localStorage.setItem("login_token", JSON.stringify(r.data)); //JS 로컬 스토리지에 로그인 성공한 흔적 남기기
+
+                //JS 세션 스토리지[ 브라우저 모두 닫히면 사라진다. 다른 도메인과 같이 저장된다. ]
+                sessionStorage.setItem("login_token", JSON.stringify(r.data));
 
                window.location.href = "/"; //location하면 r.data(로그인한 정보)사라짐 => Login 함수안에 있으니까 지역변수
             }
