@@ -47,11 +47,12 @@ export default function Todo(props) {
         if(e.key === "Enter" || e.keyCode === 13){
              console.log("turnOnReadOnly")
              setReadOnly(true);
+             //엔터를 칠때 수정이 완료된 것.
+             axios.put("http://192.168.219.113:8080/todo",  items).then(r => {
+                editItem();
+             })
         }
-        //엔터를 칠때 수정이 완료된 것.
-        axios.put("http://192.168.17.17:8080/todo",  items).then(r => {
-            editItem();
-        })
+
     }
 
     //7. 입력받은 값을 변경
@@ -64,7 +65,7 @@ export default function Todo(props) {
     //8. 체크박스 업데이트
     const checkboxEventHandler = (e) => {
         items.done = e.target.checked;
-        axios.put("http://192.168.17.17:8080/todo",  items).then(r => {
+        axios.put("http://192.168.219.113:8080/todo",  items).then(r => {
             editItem();
         })
     }

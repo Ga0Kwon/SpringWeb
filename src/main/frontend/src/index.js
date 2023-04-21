@@ -18,6 +18,8 @@ import AppTodo from './example/exBook/AppTodo';
 import Hook1 from './example/ex3hook/Hook1';
 import Hook2 from './example/ex3hook/Hook2';
 
+import Index from './component/Index';
+
 //1. HTML 에 존재하는 div 가져오기 [document.getElementById('root')]
 //2. ReactDOM.createRoot(해당 div[엘리먼트]) : 해당 div를 react root로 사용하여 root 객체 생성
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -35,10 +37,15 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
           </React.StrictMode>
     )}, 1000)*/
 
-root.render(
-  <React.StrictMode> {/*try/catch같은 건데 예외를 찾으면서 Hook2를 한번 실행함*/}
+/*root.render(
+  <React.StrictMode> {*//*try/catch같은 건데 예외를 찾으면서 Hook2를 한번 실행함*//*}
    <AppTodo />
   </React.StrictMode>
+);*/
+
+/* 시작 !*/
+root.render(
+   <Index />
 );
 
 /* ------------------------------- vs. ---------------------------*/

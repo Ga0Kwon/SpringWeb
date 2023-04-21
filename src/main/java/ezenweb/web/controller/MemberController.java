@@ -29,7 +29,8 @@ public class MemberController {
         JSP URI 구조 => 프로젝트내 경로
 	    SPRING URI 구조 => Restful API
     */
-    @GetMapping("/signup")
+    //서버 사이드 라우팅 : 클라이언트가 서버에게 html 요청하는 방식 [ 리액트 통합 개발일경우 사용안함. ]
+    /*@GetMapping("/signup")
     public Resource getSignup(){
         return new ClassPathResource("templates/member/signup.html");
     }
@@ -45,9 +46,8 @@ public class MemberController {
     @GetMapping("/findId")
     public Resource findId(){return new ClassPathResource("templates/member/findId.html");}
 
-
     @GetMapping("/findPw")
-    public Resource findPw(){return new ClassPathResource("templates/member/findPw.html");}
+    public Resource findPw(){return new ClassPathResource("templates/member/findPw.html");}*/
 
     @Autowired
     MemberService memberService;

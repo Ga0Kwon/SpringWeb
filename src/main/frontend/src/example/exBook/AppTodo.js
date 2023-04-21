@@ -17,7 +17,7 @@ export default function AppTodo(props) {
 
     //재사용을 위해 함수로 따로 만든다.(처음 들어올때, 수정, 삭제, 등록시)
     const getTodo = () =>{
-        axios.get( "http://192.168.17.17:8080/todo" )
+        axios.get( "http://192.168.219.113:8080/todo" )
             .then( r => {
                 console.log( r.data );
                 setItems( r.data ); // 서버에게 응답받은 리스트를 재렌더링
@@ -61,7 +61,7 @@ export default function AppTodo(props) {
         setItems([...items, item]); // 기존 상태 items 에 item 추가
         //item = {title : "입력받은값", id = "ID-배열길이", done : "기본값 false"}
         //setItems([...상태명, 값]); : ... 앞에 추가 : react의 규칙
-        axios.post("http://192.168.17.17:8080/todo", item).then(r => {
+        axios.post("http://192.168.219.113:8080/todo", item).then(r => {
              getTodo();
         })
     }
@@ -73,7 +73,7 @@ export default function AppTodo(props) {
         const newItems = items.filter(i => i.id !== item.id);
             // * 삭제할 id를 제외한 새로운 newItems 배열이 선언
         //setItems([...newItems])
-        axios.delete("http://192.168.17.17:8080/todo", {params : {tno : item.id}}).then(r => {
+        axios.delete("http://192.168.219.113:8080/todo", {params : {tno : item.id}}).then(r => {
              getTodo();
         })
 
@@ -107,6 +107,9 @@ export default function AppTodo(props) {
 
     //4. 수정 함수
     const editItem = () => {
+        // let newItems = items.map((o) => {return o})
+        // setItmems([newItems])
+
         setItems([...items]); //재 랜더링
     }
 

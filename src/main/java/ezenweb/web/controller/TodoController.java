@@ -12,7 +12,7 @@ import java.util.List;
 @Slf4j //로그 기능 주입
 @RequestMapping("/todo")
 // 해당 컨트롤은 http://localhost:3000 요청 CROS 정책
-@CrossOrigin(origins = "http://192.168.17.17:3000") //리소스를 교차로 지원
+@CrossOrigin(origins = "http://192.168.219.113:3000") //리소스를 교차로 지원
 public class TodoController {
     @Autowired
     private TodoService todoService;
