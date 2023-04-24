@@ -82,6 +82,7 @@ public class MemberController {
         System.out.println("controller에 memail 들어옴 : " + memail);
         //MemberDto memberDto = (MemberDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         MemberDto memberDto = memberService.deleteCheck(mpassword, memail);
+        System.out.println(memberDto);
 
         boolean result = false;
 

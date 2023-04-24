@@ -197,8 +197,7 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
     }
 
     public MemberDto deleteCheck(String mpassword, String memail){
-        Optional<MemberEntity> memberInfo = memberEntityRepository.findByMemailAndMpassword(mpassword, memail);
-
+        Optional<MemberEntity> memberInfo = memberEntityRepository.findByMemail(memail);
         if(memberInfo.isPresent()){
             return memberInfo.get().toDto();
         }
