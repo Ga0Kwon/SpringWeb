@@ -93,6 +93,7 @@ public class MemberController {
     //5. 아이디 찾기
     @PostMapping("/find")
     public String findId(@RequestBody MemberDto memberDto){
+        System.out.println("아이디 찾기 memberDto: " + memberDto);
         String result = memberService.findId(memberDto);
         return result;
     }

@@ -13,24 +13,6 @@ export default function Header(props){
 
         window.location.href ="/login"
     }
-    //실질적인 삭제
-    const accountDelete = () => {
-       let mpassword = document.querySelector(".mpassword").value;
-
-        axios.delete('http://localhost:8080/member/info', {params : {"mpassword" : mpassword}})
-        .then(r => {
-            if(r.data == true){
-                alert('계정 삭제 성공되었습니다.');
-                loginOut();
-            }
-        })
-    }
-
-    //삭제전 비밀번호 확인
-    const checkPwd = () => {
-        document.querySelector(".etcDiv").innerHTML = `  비밀번호 입력 : <input type="text" name = "mpassword" class = "mpassword"/>
-                <button type = "button" onClick = {accountDelete}>계정 삭제</button><br/>`;
-    }
 
 
     return(<>
@@ -39,12 +21,11 @@ export default function Header(props){
             <div className = "etcDiv"></div>
             { login == null ?
                 ( <>
-                    <a href = "/login" > login</a>
-                    <a href = "/signup" > signup</a>
+                    <a href = "/member/login" > login</a>
+                    <a href = "/member/signup" > signup</a>
                  </>)
                  : (<>
                     <button onClick = {loginOut}>로그아웃</button>
-                    <button onClick = {checkPwd}>회원탈퇴</button>
                     </>)}
         </div>
     </>)

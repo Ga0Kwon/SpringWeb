@@ -9,6 +9,8 @@ import Footer from "./Footer";
 import Login from "./member/Login";
 import Signup from "./member/Signup";
 
+import Find from "./member/Find";
+
 /*
     React-router-dom 다양한 라우터 컴포넌트 제공
     1. <BrowserRouter> : 가상 URL 관리[URL 동기화]
@@ -26,8 +28,9 @@ export default function Index(props){
 
             <Routes>
                 <Route path = "/" element={<Main/>}/>
-                <Route path = "login" element={<Login/>}/>
-                <Route path = "signup" element={<Signup/>}/>
+                <Route path = "/member/login" element={<Login/>}/>
+                <Route path = "/member/signup" element={<Signup/>}/>
+                <Route path = "/member/find" element={<Find/>}/>
             </Routes>
 
             <Footer/>{/*푸터는 라우터에 넣지X*/}
