@@ -120,7 +120,16 @@ public class MemberController {
         boolean result = memberService.checkId(memail);
         return result;
     }
-    
+
+    //9. 전화번호 중복검사[하나 더 만드는 것보다 delete 안쓰는 거 쓰는게 더 나을 것 같아서 사용.]
+    @DeleteMapping("/find")
+    public boolean findPhone(@RequestParam String mphone){
+        System.out.println("전화번호 들어오나?" + mphone);
+        boolean result = memberService.checkPhone(mphone);
+        return result;
+    }
+
+
     // ------------------ 스프링 시큐리티 사용화 전 ------------------------
     // 스프링 시큐리티를 쓰기 때문에 아래의 코드는 사용X
 /*    // 로그인

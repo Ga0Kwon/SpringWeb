@@ -14,12 +14,23 @@ export default function Signup(props){
             }).catch(err => {console.log(err)})
         }
 
+        const checkPhone = () => {
+            axios.delete("http://localhost:8080/member/find", {params : {mphone : document.querySelector(".mphone").value}})
+             .then(r => {
+                    if(r.data == false){
+                        document.querySelector(".checkPhonetxt").innerHTML = `중복된 전화번호입니다.`;
+                    }else{
+                        document.querySelector(".checkPhonetxt").innerHTML = `O`;
+                    }
+                }).catch(err => {console.log(err)})
+        }
+
 
         const onSignup = () => {
             console.log("signup 켜지냐")
 
-            let checkTxt = document.querySelector(".checkIdtxt").innerHTML;
-
+            let checkIdTxt = document.querySelector(".checkIdtxt").innerHTML;
+            let checkPhoneTxt = document.querySelector(".checkPhonetxt").innerHTML;
             let info = {
                 memail : document.querySelector(".memail").value,
                 mpassword : document.querySelector(".mpassword").value,
@@ -27,7 +38,7 @@ export default function Signup(props){
                 mphone : document.querySelector(".mphone").value
             }
 
-          if(checkTxt == `O`){
+          if(checkIdTxt == `O` && checkPhoneTxt == `O`){
                 axios.post("http://localhost:8080/member/info", info)
                 .then(r => {
                     if(r.data == true){
@@ -35,9 +46,18 @@ export default function Signup(props){
                         window.location.href = "/login";
                     }
                 }).catch(err => {console.log(err)})
-            }else{
+            }else if(checkIdTxt != `O` && checkPhoneTxt != `O`){
+                 alert("중복된 아이디와 전화번호입니다. 다시 입력해주세요")
+                 document.querySelector(".mphone").value = ``;
+                 document.querySelector(".memail").value = ``;
+                 return false;
+            }else if(checkIdTxt != `O`){
                  alert("중복된 아이디입니다. 다시 입력해주세요")
                  document.querySelector(".memail").value = ``;
+                 return false;
+             }else if(checkPhoneTxt != `O` ){
+                alert("중복된 전화번호입니다.. 다시 입력해주세요")
+                 document.querySelector(".mphone").value = ``;
                  return false;
              }
         }
@@ -48,7 +68,8 @@ export default function Signup(props){
                 아이디[이메일] : <input onKeyUp={checkId}type="text" name = "memail" className = "memail"/>
                 <span className = "checkIdtxt"></span><br/>
                 비밀번호 : <input type="text" name = "mpassword" className = "mpassword"/><br/>
-                전화번호 : <input type="text" name = "mphone" className = "mphone"/><br/>
+                전화번호 : <input onKeyUp={checkPhone} type="text" name = "mphone" className = "mphone"/>
+                <span className = "checkPhonetxt"></span><br/>
                 이름 : <input type="text" name = "mname" className = "mname"/><br/>
                 <button type = "button" onClick={onSignup}>가입</button>
              </form>

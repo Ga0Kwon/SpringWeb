@@ -10,7 +10,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 export default function Category(props){
     let [cate, setCate] = useState(0)
-    let [list, setList] = useState([]); //현재 선택된 select
+    let [list, setList] = useState([]); //현재 선택된 select {} : 객체 [] : 배열
 
     useEffect(() => {
         axios.get("http://localhost:8080/board/category/list")
@@ -46,6 +46,7 @@ export default function Category(props){
                    onChange={handleChange}
                  >
                     <MenuItem value={0}>전체보기</MenuItem>
+                    {/* 서버로부터 받은 카테고리 리스트를 반복해서 출력*/}
                    {
                     list.map((c) => {
                        return <MenuItem value={c.cno}>{c.cname}</MenuItem>

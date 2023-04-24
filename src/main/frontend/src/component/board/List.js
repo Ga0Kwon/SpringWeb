@@ -10,6 +10,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+import Button from '@mui/material/Button';
+
 import Category from './Category';
 
 /*import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material'*/
@@ -42,11 +44,17 @@ export default function List(props){
     //useEffect(() => {} , []) : 생성될 때 1번
     //useEffect(() => {}, [변수]) : 생성, 해당 변수가 업데이트 될때마다 새 렌더링
 
+    const goWrite = () => {
+        window.location.href = "/board/write"
+    }
 
 
     return(<>
-        <Category categoryChange = {categoryChange}/>
         <Container>
+        <div style={{display:'flex', justifyContent : 'space-between', alignItems : 'center'}}>
+            <Category categoryChange = {categoryChange}/>
+            <Button variant="contained"onClick ={goWrite}>글쓰기</Button>
+        </div>
          <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>

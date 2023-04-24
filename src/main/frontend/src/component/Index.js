@@ -14,6 +14,9 @@ import DeleteMember from "./member/DeleteMember";
 
 import Board from "./board/List";
 import Category from "./board/Category";
+import BoardWrite from "./board/Write";
+
+import DashBoard from "./admin/DashBoard";
 
 /*
     React-router-dom 다양한 라우터 컴포넌트 제공
@@ -37,7 +40,10 @@ export default function Index(props){
                 <Route path = "/member/find" element={<Find/>}/>
                 <Route path = "/member/deleteMember" element={<DeleteMember/>}/>
                 <Route path = "/board/list" element={<Board/>}/>
+                <Route path = "/board/write" element={<BoardWrite/>}/>
                 <Route path = "/board/category" element={<Category/>}/>
+                <Route path = "/admin/dashboard" element={<DashBoard/>}/>
+
             </Routes>
 
             <Footer/>{/*푸터는 라우터에 넣지X*/}

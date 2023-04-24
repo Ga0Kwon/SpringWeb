@@ -170,6 +170,13 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
         boolean result = memberEntityRepository.existsByMemail(memail);
         return !result;
     }
+    
+    // 1-0 전화번호 중복 검사
+    public boolean checkPhone(String mphone){
+        boolean result = memberEntityRepository.existsByMphone(mphone);
+        return !result;
+    }
+
     @Transactional //수정은 필수!!! [Commit]
     //3. 화원 수정
     public boolean update(MemberDto memberDto){

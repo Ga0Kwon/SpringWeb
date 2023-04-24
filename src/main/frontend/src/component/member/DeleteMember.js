@@ -8,7 +8,7 @@ export default function DeleteMember(props){
        let mpassword = document.querySelector(".mpassword").value;
        let info = JSON.parse(sessionStorage.getItem('login_token'));
 
-        axios.delete('http://localhost:8080/member/info', {params : {"mpassword" : mpassword, "memail" : info.memail }})
+        axios.delete('http://localhost:8080/member/info', {params : {mpassword : mpassword, memail : info.memail }})
         .then(r => {
             if(r.data == true){
                 alert('계정 삭제 성공되었습니다.');
