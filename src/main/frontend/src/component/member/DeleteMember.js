@@ -12,7 +12,6 @@ export default function DeleteMember(props){
         .then(r => {
             if(r.data == true){
                 alert('계정 삭제 성공되었습니다.');
-                window.location.href = '/member/login';
             }
         })
     }

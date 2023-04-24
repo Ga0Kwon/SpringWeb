@@ -20,15 +20,17 @@ export default function Header(props){
         <div>
             <a href = "/" > Home  </a>
             <a href = "/board/list">게시판</a>
-            <a href = "/admin/dashboard" > 관리자모드</a>
+            <a href = "/admin/ dashBorad" > 관리자모드</a>
             { login == null ?
                 ( <>
                     <a href = "/member/login" > login</a>
                     <a href = "/member/signup" > signup</a>
                  </>)
                  : (<>
+                    <div className = "etcDiv">{loginInfo.memail}님</div>
                     <button onClick = {loginOut}>로그아웃</button>
                     <a href = "/member/deleteMember">회원탈퇴</a>
+                    <a href = "/member/update">회원수정</a>
                     </>)}
         </div>
     </>)

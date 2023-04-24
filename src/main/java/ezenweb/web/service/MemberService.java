@@ -295,6 +295,16 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
         }
         return newPwd;
     }
+    
+    //아이디/이메일로 멤버 정보 가져오기
+    public MemberDto beforeUpdateFindId(String memail){
+        Optional<MemberEntity> optionalMemberEntity = memberEntityRepository.findByMemail(memail);
+
+        if(optionalMemberEntity.isPresent()){
+            return optionalMemberEntity.get().toDto();
+        }
+        return null;
+    }
 
     // *** 로그인 [ 시큐리티 사용했을때]
     // 시큐리티는 API [누군가 미리 만들어진 메서드 안에서 커스터마이징[수정]

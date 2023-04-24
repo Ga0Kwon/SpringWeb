@@ -66,15 +66,22 @@ public class MemberController {
         MemberDto memberDto = memberService.info();
         return memberDto;
     }
+
     //3. 회원정보 수정 [U]
     @PutMapping("/info")
-    public boolean update(@RequestBody MemberDto memberDto){
+    public boolean update(@RequestBody MemberDto memberDto) {
         log.info("member info update : {}", memberDto);
-        MemberDto dto =  memberService.info();
-        memberDto.setMno(dto.getMno());
-        boolean result = memberService.update(memberDto);
-        return result;
+        //MemberDto dto =  memberService.info();
+        MemberDto dto = memberService.beforeUpdateFindId(memberDto.getMemail());
+
+        if (dto != null) {
+            memberDto.setMno(dto.getMno());
+            boolean result = memberService.update(memberDto);
+            return result;
+        }
+        return false;
     }
+
     //4. 회원정보 탈퇴 [D]
     @DeleteMapping("/info")
     public boolean delete(@RequestParam String mpassword, @RequestParam String memail){
