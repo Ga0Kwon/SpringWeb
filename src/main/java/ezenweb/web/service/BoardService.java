@@ -120,18 +120,18 @@ public class BoardService {
 
     //4. 카테고리 출력
     @Transactional
-    public Map<Integer, String> categoryList(){
+    public List<CategoryDto> categoryList(){
         List<CategoryEntity> categoryEntities = categoryEntityRepository.findAll();
 
         //1. Dto 또는 Map으로 형변환
         // List<엔티티> ---------> Map
-        Map<Integer, String> map = new HashMap<>();
-
+        //Map<Integer, String> map = new HashMap<>();
+        List<CategoryDto> list = new ArrayList<>();
         categoryEntities.forEach((e) -> {
-            map.put(e.getCno(), e.getCname());
+            list.add(new CategoryDto(e.getCno(), e.getCname()));
         });
 
-        return map;
+        return list;
     }
     @Transactional
     //5. 카테고리별 게시물 출력 + 전체 출력

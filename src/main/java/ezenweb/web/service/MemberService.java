@@ -188,6 +188,15 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
         }
         return false;
     }
+
+    public MemberDto deleteCheck(String mpassword, String memail){
+        Optional<MemberEntity> memberInfo = memberEntityRepository.findByMemailAndMpassword(mpassword, memail);
+
+        if(memberInfo.isPresent()){
+            return memberInfo.get().toDto();
+        }
+        return null;
+    }
     @Transactional
     //4.회원 삭제
     public boolean delete(int mno){

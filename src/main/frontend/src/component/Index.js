@@ -10,6 +10,10 @@ import Login from "./member/Login";
 import Signup from "./member/Signup";
 
 import Find from "./member/Find";
+import DeleteMember from "./member/DeleteMember";
+
+import Board from "./board/List";
+import Category from "./board/Category";
 
 /*
     React-router-dom 다양한 라우터 컴포넌트 제공
@@ -31,6 +35,9 @@ export default function Index(props){
                 <Route path = "/member/login" element={<Login/>}/>
                 <Route path = "/member/signup" element={<Signup/>}/>
                 <Route path = "/member/find" element={<Find/>}/>
+                <Route path = "/member/deleteMember" element={<DeleteMember/>}/>
+                <Route path = "/board/list" element={<Board/>}/>
+                <Route path = "/board/category" element={<Category/>}/>
             </Routes>
 
             <Footer/>{/*푸터는 라우터에 넣지X*/}

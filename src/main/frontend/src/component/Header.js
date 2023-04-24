@@ -14,18 +14,21 @@ export default function Header(props){
         window.location.href ="/login"
     }
 
+    let loginInfo = JSON.parse(sessionStorage.getItem("login_token"));
 
     return(<>
         <div>
             <a href = "/" > Home  </a>
-            <div className = "etcDiv"></div>
+            <a href = "/board/list">게시판</a>
             { login == null ?
                 ( <>
                     <a href = "/member/login" > login</a>
                     <a href = "/member/signup" > signup</a>
                  </>)
                  : (<>
+                    <div className = "etcDiv">{loginInfo.memail}님</div>
                     <button onClick = {loginOut}>로그아웃</button>
+                    <a href = "/member/deleteMember">회원탈퇴</a>
                     </>)}
         </div>
     </>)

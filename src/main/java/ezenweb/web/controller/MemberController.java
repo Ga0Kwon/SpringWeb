@@ -77,14 +77,21 @@ public class MemberController {
     }
     //4. 회원정보 탈퇴 [D]
     @DeleteMapping("/info")
-    public boolean delete(@RequestParam String mpassword){
+    public boolean delete(@RequestParam String mpassword, @RequestParam String memail){
         System.out.println("controller에 memberpassword 들어옴 : " + mpassword);
-        MemberDto memberDto = (MemberDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("controller에 memail 들어옴 : " + memail);
+        //MemberDto memberDto = (MemberDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        MemberDto memberDto = memberService.deleteCheck(mpassword, memail);
+
         boolean result = false;
 
-        if(new BCryptPasswordEncoder().matches(mpassword, memberDto.getMpassword())){
+        if( memberDto != null && new BCryptPasswordEncoder().matches(mpassword, memberDto.getMpassword())){
             result =  memberService.delete(memberDto.getMno());
         }
+
+       /* if(new BCryptPasswordEncoder().matches(mpassword, memberDto.getMpassword())){
+            result =  memberService.delete(memberDto.getMno());
+        }*/
 
         return result;
 

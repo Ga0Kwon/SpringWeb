@@ -77,6 +77,7 @@ export default function Find(props){
                  <button onClick={onFindId} type = "button">아이디 찾기</button>
                  <div class = "returnId"></div>
             </form>
+
             <form>
                   <h3>비밀번호 찾기</h3>
                   [아이디/이메일] <input type="text" name = "memail" className = "memail"/><br/>

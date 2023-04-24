@@ -2,6 +2,7 @@ package ezenweb.web.controller;
 
 import ezenweb.example.day06.객체관계.Board;
 import ezenweb.web.domain.board.BoardDto;
+import ezenweb.web.domain.board.CategoryDto;
 import ezenweb.web.domain.member.MemberDto;
 import ezenweb.web.service.BoardService;
 import ezenweb.web.service.MemberService;
@@ -17,6 +18,7 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequestMapping("/board")
+@CrossOrigin(origins = "http://localhost:3000") //리소스를 교차로 지원
 public class BoardController {
     @Autowired
     private BoardService boardService;
@@ -44,8 +46,8 @@ public class BoardController {
         //List {값, 값, 값,값}
         //Map{키 : 값, 키 : 값, 키 : 값}
     @GetMapping("/category/list")
-    public Map<Integer, String> categoryList(){
-        Map<Integer, String> result = boardService.categoryList();
+    public List<CategoryDto> categoryList(){
+        List<CategoryDto> result = boardService.categoryList();
         return result;
     }
 
