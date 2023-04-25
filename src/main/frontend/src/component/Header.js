@@ -9,7 +9,7 @@ export default function Header(props){
         sessionStorage.setItem('login_token', null);
 
         //백엔드의 인증세션 지우기
-        axios.get('http://localhost:8080/member/logout').then(r => {console.log(r)})
+        axios.get('/member/logout').then(r => {console.log(r)})
 
         window.location.href ="/login"
     }

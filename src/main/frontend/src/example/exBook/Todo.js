@@ -48,7 +48,7 @@ export default function Todo(props) {
              console.log("turnOnReadOnly")
              setReadOnly(true);
              //엔터를 칠때 수정이 완료된 것.
-             axios.put("http://192.168.219.113:8080/todo",  items).then(r => {
+             axios.put("/todo",  items).then(r => {
                 editItem();
              })
         }
@@ -65,7 +65,7 @@ export default function Todo(props) {
     //8. 체크박스 업데이트
     const checkboxEventHandler = (e) => {
         items.done = e.target.checked;
-        axios.put("http://192.168.219.113:8080/todo",  items).then(r => {
+        axios.put("/todo",  items).then(r => {
             editItem();
         })
     }

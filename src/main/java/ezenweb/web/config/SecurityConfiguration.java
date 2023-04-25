@@ -40,31 +40,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         //super.configure(http); //super : 부모클래스 호출 => 이거 주석처리하면 첫 로그인 화면
         // 부모꺼 안써 => 사이트 열림
         http
-                // 권한에 따른 HTTP GET 요청 제한
-                .authorizeHttpRequests() // HTTP 인증 요청
-                    .antMatchers("/member/info/mypage")
-                        .hasRole("user") // 위 URL 패턴에 요청할 수 있는 권한명
-                    //토큰 (ROLE_user) : ROLE_ 제외한 권한명 작성 => 권한이 없을 경우 login페이지로 넘어감(자동)
-                    .antMatchers("/admin/**") // localhost:8080/admin/~~ 이하 페이지는 모두 제한
-                     .hasRole("admin") // URL가 /admin/포함하는 모든 페이지는 admin만 입장 가능하다.
-                /*.antMatchers("/board/write") //회원제 게시판 => 회원만 가능
-                    .hasRole("user") // 글쓰기 페이지는 회원만 가능*/
-                .antMatchers("/**") //localhost:8080/~~ 이하 페이지는 권한해제
-                    .permitAll() // 권한 페이지=> 맨 밑에다가 넣어야하는 게 위에는 먹히고 남은 부분을 해제하기때문
-                .and()
-                .csrf() // 사이트간 요청 위조 [ post, put http 사용 불가능]
-                //.disable() //모든 http csrf 해제
-                    // 특정 매핑 URL csrf 무시
-                    .ignoringAntMatchers("/member/info") //member/info 에 관련된 것은 모두 열림
-                    .ignoringAntMatchers("/member/login") // 로그인도 열어둠
-                    .ignoringAntMatchers("/member/find") // 아이디 찾기 비번 찾기 열어둠
-                    .ignoringAntMatchers("/board/write")
-                    .ignoringAntMatchers("/board/category/write")
-                    .ignoringAntMatchers("/board/details")
-                    .ignoringAntMatchers("/todo/**")
-                    .ignoringAntMatchers("/admin/dashboard")
-                    .ignoringAntMatchers("/board/list")
-                .and() // 기능 추가/구분할때 사용되는 메서드
                 .formLogin()
                     .loginPage("/member/login") // 로그인으로 사용될 페이지 매핑 URL[어떤 페이지에서 로그인하는지]
                     .loginProcessingUrl("/member/login") // 로그인을 처리할 매핑 URL
@@ -87,11 +62,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .userService(memberService); //oauth2 서비스를 지원하는
 
         http.cors(); //CORS 정책 사용.
+        http.csrf().disable(); //CSRF 사용 해제
 
     } //configure
+
+
     //import org.springframework.web.cors.CorsConfigurationSource;
     //스프링 시큐리티에 CORS 정책 설정 [리액트가 요청 받기 위해]
-    @Bean //빈 등록
+/*    @Bean //빈 등록
     CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); //주소
@@ -101,5 +79,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
+    }*/
+
 }

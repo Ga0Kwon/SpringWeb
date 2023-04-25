@@ -6,7 +6,7 @@ export default function DashBoard(props){
     const setCategory = () => {
         let cname = document.querySelector(".cname")
 
-        axios.post("http://localhost:8080/board/category/write", {"cname" : cname.value})
+        axios.post("/board/category/write", {"cname" : cname.value})
         .then((r) => {
             if(r.data == true){
                 alert('카테고리 등록 성공')

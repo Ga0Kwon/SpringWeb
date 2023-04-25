@@ -12,7 +12,7 @@ export default function Login(props){
         /*axios에서 form 전송
             login은 스프링 시큐리티가 처리한다.
         */
-        axios.post("http://localhost:8080/member/login", loginFormData)
+        axios.post("/member/login", loginFormData)
         .then(r => {
             if(r.data == false){
                 alert('동일한 회원정보가 없습니다.')
@@ -38,9 +38,9 @@ export default function Login(props){
                 비밀번호 : <input type="text" name = "mpassword" className = "mpassword"/><br/>
                 <button onClick = {onLogin} type = "button">로그인</button>
                 <a href = "/member/find">계정 정보 찾기</a>
-                <a href = "http://localhost:8080/oauth2/authorization/google">구글로그인</a>
-                <a href = "http://localhost:8080/oauth2/authorization/kakao">카카오로그인</a>
-                <a href = "http://localhost:8080/oauth2/authorization/naver">네이버로그인</a>
+                <a href = "/oauth2/authorization/google">구글로그인</a>
+                <a href = "/oauth2/authorization/kakao">카카오로그인</a>
+                <a href = "/oauth2/authorization/naver">네이버로그인</a>
             </form>
     </>)
 }

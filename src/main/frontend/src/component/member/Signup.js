@@ -4,7 +4,7 @@ import axios from 'axios';
 export default function Signup(props){
 
         const checkId = () => {
-            axios.get("http://localhost:8080/member/find", {params : {memail : document.querySelector(".memail").value}})
+            axios.get("/member/find", {params : {memail : document.querySelector(".memail").value}})
             .then(r => {
                 if(r.data == false){
                     document.querySelector(".checkIdtxt").innerHTML = `중복된 아이디입니다.`;
@@ -15,7 +15,7 @@ export default function Signup(props){
         }
 
         const checkPhone = () => {
-            axios.delete("http://localhost:8080/member/find", {params : {mphone : document.querySelector(".mphone").value}})
+            axios.delete("/member/find", {params : {mphone : document.querySelector(".mphone").value}})
              .then(r => {
                     if(r.data == false){
                         document.querySelector(".checkPhonetxt").innerHTML = `중복된 전화번호입니다.`;
@@ -39,11 +39,11 @@ export default function Signup(props){
             }
 
           if(checkIdTxt == `O` && checkPhoneTxt == `O`){
-                axios.post("http://localhost:8080/member/info", info)
+                axios.post("/member/info", info)
                 .then(r => {
                     if(r.data == true){
                         alert('회원가입이 완료되었습니다.')
-                        window.location.href = "/login";
+                        window.location.href = "/member/login";
                     }
                 }).catch(err => {console.log(err)})
             }else if(checkIdTxt != `O` && checkPhoneTxt != `O`){

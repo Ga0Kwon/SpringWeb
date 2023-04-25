@@ -15,7 +15,7 @@ import java.lang.reflect.Member;
 @RestController // @Contoller + @ResponseBody
 @Slf4j //로그 기능 주입
 @RequestMapping("/member")
-@CrossOrigin(origins = "http://localhost:3000") //리소스를 교차로 지원
+/*@CrossOrigin(origins = "http://localhost:3000") //리소스를 교차로 지원*/
 public class MemberController {
     //1. @Autowired 없이 [싱글톤]
    /*

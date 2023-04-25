@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequestMapping("/board")
-@CrossOrigin(origins = "http://localhost:3000") //리소스를 교차로 지원
+/*@CrossOrigin(origins = "http://localhost:3000") //리소스를 교차로 지원*/
 public class BoardController {
     @Autowired
     private BoardService boardService;
@@ -28,10 +28,10 @@ public class BoardController {
 
     /* -------------------------- View 반환 -------------------------- */
     //서버 사이드 라우팅 : 클라이언트가 서버에게 html 요청하는 방식 [ 리액트 통합 개발일경우 사용안함. ]
-    @GetMapping("")
+/*    @GetMapping("")
     public Resource index(){
         return new ClassPathResource("templates/board/list.html");
-    }
+    }*/
     /* -------------------------- Model 반환 -------------------------- */
 
     //1. 카테고리 등록 

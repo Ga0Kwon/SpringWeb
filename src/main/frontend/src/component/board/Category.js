@@ -13,7 +13,7 @@ export default function Category(props){
     let [list, setList] = useState([]); //현재 선택된 select {} : 객체 [] : 배열
 
     useEffect(() => {
-        axios.get("http://localhost:8080/board/category/list")
+        axios.get("/board/category/list")
         .then(res => {
             setList(res.data);
         })

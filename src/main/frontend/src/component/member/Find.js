@@ -16,7 +16,7 @@ export default function Find(props){
 
             console.log(info);
 
-            axios.post("http://localhost:8080/member/find", info)
+            axios.post("/member/find", info)
             .then(r => {
                 if(r.data != 'undefined'){
                      document.querySelector(".returnId").innerHTML = `회원님의 아이디 : ${r.data}`;
@@ -35,7 +35,7 @@ export default function Find(props){
 
             console.log(info);
 
-             axios.put("http://localhost:8080/member/find", info)
+             axios.put("/member/find", info)
             .then(r => {
                 console.log(r.data)
                 if(r.data != 'undefined'){

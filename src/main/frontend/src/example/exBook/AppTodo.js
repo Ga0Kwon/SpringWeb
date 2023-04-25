@@ -17,7 +17,7 @@ export default function AppTodo(props) {
 
     //재사용을 위해 함수로 따로 만든다.(처음 들어올때, 수정, 삭제, 등록시)
     const getTodo = () =>{
-        axios.get( "http://192.168.219.113:8080/todo" )
+        axios.get( "/todo" )
             .then( r => {
                 console.log( r.data );
                 setItems( r.data ); // 서버에게 응답받은 리스트를 재렌더링

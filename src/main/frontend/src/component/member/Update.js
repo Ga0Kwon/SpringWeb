@@ -11,7 +11,7 @@ export default function Update(props){
             mphone : document.querySelector(".mphone").value
         }
         console.log(info)
-        axios.put("http://localhost:8080/member/info", info)
+        axios.put("/member/info", info)
         .then(r => {
             if(r.data == true){
                 alert('회원수정이 완료되었습니다.');
