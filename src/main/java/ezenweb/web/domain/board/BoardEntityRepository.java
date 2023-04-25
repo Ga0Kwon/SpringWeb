@@ -19,9 +19,10 @@ public interface BoardEntityRepository extends JpaRepository<BoardEntity, Intege
             //ps.setInt(1, cno)
         //[JPA] select * from board where cno = :cno(:매개변수명);
             //:(콜론) : 해당 메소드의 매개변수 이름
+            //%% : 전체를 의미함. => 전체 출력
     @Query(value="select * " +
             "from board " +
-            "where cno = :cno"
+            "where if(:cno = 0 , cno like '%%', cno = :cno)"
             , nativeQuery = true)
     Page<BoardEntity> findBySearch(Pageable pageable, int cno); //Pageable pageable : 자동으로 검색
 

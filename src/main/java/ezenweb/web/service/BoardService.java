@@ -144,18 +144,18 @@ public class BoardService {
         log.info("service list : " + page);
         //1. pageable 인터페이스 [ 페이지 관련 인터페이스 ] => domain꺼 쓰기!
 
-        Pageable pageable = PageRequest.of(page-1, 10, Sort.by(Sort.Direction.DESC, "bno") );
+        Pageable pageable = PageRequest.of(page-1, 5, Sort.by(Sort.Direction.DESC, "bno") );
         // PageRequest.of(페이지번호[0시작]) -1을 해줘야한다 0부터 시작하니까
         //size : 총 몇페이지씩
         //Sort.by(Sort.Direction.DESC, "정렬기준 필드") : 정렬기준 필드를 기준으로 내림차순 정렬
-        Page<BoardEntity> pageEntity;
+        Page<BoardEntity> pageEntity = boardEntityRepository.findBySearch(pageable, cno);
 
-        if(cno == 0){ //전체 보기일 경우
+        /*if(cno == 0){ //전체 보기일 경우
             pageEntity = boardEntityRepository.findAll(pageable);
         }else{ //카테고리 선택일 경우
             pageEntity = boardEntityRepository.findBySearch(pageable, cno);
         }
-
+*/
         List<BoardDto> boardDtoList = new ArrayList<BoardDto>();
 
         pageEntity.forEach((b) -> {
