@@ -2,11 +2,11 @@ import React from 'react';
 import axios from 'axios';
 
 export default function Update(props){
-    let tokenInfo = JSON.parse(sessionStorage.getItem('login_token'));
+   /*
 
     const onUpdate = () => {
         let info = {
-            memail : tokenInfo.memail,
+
             mname : document.querySelector(".mname").value,
             mphone : document.querySelector(".mphone").value
         }
@@ -31,5 +31,5 @@ export default function Update(props){
                 <button type = "button" onClick={onUpdate}>수정</button>
               </form>
         </>
-    )
+    )*/
 }

@@ -3,12 +3,11 @@ import axios from 'axios';
 
 export default function DeleteMember(props){
 
-    //실질적인 삭제
+    /*//실질적인 삭제
     const accountDelete = () => {
        let mpassword = document.querySelector(".mpassword").value;
-       let info = JSON.parse(sessionStorage.getItem('login_token'));
 
-        axios.delete('/member/info', {params : {mpassword : mpassword, memail : info.memail }})
+        axios.delete('/member/info', {params : {mpassword : mpassword }})
         .then(r => {
             if(r.data == true){
                 alert('계정 삭제 성공되었습니다.');
@@ -22,5 +21,5 @@ export default function DeleteMember(props){
          <button type = "button" onClick = {accountDelete}>계정 삭제</button><br/>
     </>)
 
-
+*/
 }

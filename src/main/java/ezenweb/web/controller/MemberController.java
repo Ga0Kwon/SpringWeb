@@ -71,8 +71,7 @@ public class MemberController {
     @PutMapping("/info")
     public boolean update(@RequestBody MemberDto memberDto) {
         log.info("member info update : {}", memberDto);
-        //MemberDto dto =  memberService.info();
-        MemberDto dto = memberService.beforeUpdateFindId(memberDto.getMemail());
+        MemberDto dto =  memberService.info();
 
         if (dto != null) {
             memberDto.setMno(dto.getMno());
@@ -84,11 +83,9 @@ public class MemberController {
 
     //4. 회원정보 탈퇴 [D]
     @DeleteMapping("/info")
-    public boolean delete(@RequestParam String mpassword, @RequestParam String memail){
+    public boolean delete(@RequestParam String mpassword){
         System.out.println("controller에 memberpassword 들어옴 : " + mpassword);
-        System.out.println("controller에 memail 들어옴 : " + memail);
-        //MemberDto memberDto = (MemberDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        MemberDto memberDto = memberService.deleteCheck(mpassword, memail);
+        MemberDto memberDto = (MemberDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         System.out.println(memberDto);
 
         boolean result = false;

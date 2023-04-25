@@ -56,8 +56,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .invalidateHttpSession(true) //세션 초기화x
                 .and()
                     .oauth2Login()  // oauth2  로그인 => 소셜 로그인 쓰겠다. /oauth2/authorization/클라이언트로 되어있는 것들은 다 여기서 채감
-                    //.defaultSuccessUrl("/") // 로그인 성공시 이동할 매핑 URL
-                    .successHandler(authSuccessFailHandler)
+                    .defaultSuccessUrl("/") // 로그인 성공시 이동할 매핑 URL
+                    //.successHandler(authSuccessFailHandler)
                     .userInfoEndpoint() // 스프링 시큐리티로 들어올 수 있도록 시큐리티 로그인 엔드포인트[종착점]
                     .userService(memberService); //oauth2 서비스를 지원하는
 

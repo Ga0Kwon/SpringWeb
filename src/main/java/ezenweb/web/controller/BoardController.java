@@ -52,7 +52,7 @@ public class BoardController {
     }
 
     //2. 게시물 쓰기
-    @PostMapping("/write")
+    @PostMapping("")
     public byte write(@RequestBody BoardDto boardDto){
         log.info("BoardDto write" + boardDto);
         byte result = boardService.write(boardDto);
@@ -68,21 +68,26 @@ public class BoardController {
     }
 
     //4. 카테고리별 게시물 출력
-    @GetMapping("/list")
+    @GetMapping("")
     public List<BoardDto> list(@RequestParam int cno){
         System.out.println("board list cno : " + cno);
         List<BoardDto> result = boardService.list(cno);
         return result;
     }
 
-    @GetMapping("/details")
+    @GetMapping("/getBoard")
     public BoardDto getDetailBoard(@RequestParam int bno){
         System.out.println("getDetailBoard bno : " + bno);
         BoardDto result = boardService.getDetailBoard(bno);
         return result;
     }
+    //수정
+    @PutMapping("")
+    public boolean update(@RequestBody BoardDto dto){
+        return false;
+    }
 
-    @DeleteMapping("/details")
+    @DeleteMapping("")
     public int deleteBoard(@RequestParam int bno){
         System.out.println("getDetailBoard bno : " + bno);
         int result = boardService.deleteBoard(bno);

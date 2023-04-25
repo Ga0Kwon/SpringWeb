@@ -32,7 +32,7 @@ export default function List(props){
     }
 
     useEffect (() => {
-        axios.get("/board/list", {params: {cno : cno}})
+        axios.get("/board", {params: {cno : cno}})
         .then(res => {
             console.log(res.data)
             setRows(res.data)

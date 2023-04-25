@@ -60,7 +60,7 @@ public class BoardEntity extends BaseTime {
                 .bview(this.bview)
                 .bdate((this.cdate.toLocalDate().toString()).equals(LocalDateTime.now().toLocalDate().toString()) ?
                         this.cdate.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) :
-                        this.cdate.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-DD")))
+                        this.cdate.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build();
     }
     
