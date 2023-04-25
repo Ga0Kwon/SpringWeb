@@ -9,7 +9,7 @@ import Footer from "./Footer";
 import Login from "./member/Login";
 import Signup from "./member/Signup";
 import Update from "./member/Update";
-import Find from "./member/Find";
+import InfoFind from "./member/InfoFind";
 import DeleteMember from "./member/DeleteMember";
 
 import Board from "./board/List";
@@ -37,7 +37,7 @@ export default function Index(props){
                 <Route path = "/" element={<Main/>}/>
                 <Route path = "/member/login" element={<Login/>}/>
                 <Route path = "/member/signup" element={<Signup/>}/>
-                <Route path = "/member/find" element={<Find/>}/>
+                <Route path = "/member/infoFind" element={<InfoFind/>}/>
                 <Route path = "/member/update" element={<Update/>}/>
                 <Route path = "/member/deleteMember" element={<DeleteMember/>}/>
                 <Route path = "/board/list" element={<Board/>}/>

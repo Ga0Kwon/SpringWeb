@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export default function Header(props){
     //let [login, setLogin] = useState(JSON.parse(localStorage.getItem('login_token')));
-    let [login, setLogin] = useState(null); //로그인 상태
+    let[login, setLogin] = useState(null); //로그인 상태
 
     const loginOut = () => {
         sessionStorage.setItem('login_token', null);
@@ -25,8 +25,7 @@ export default function Header(props){
                 //JS 로컬 스토리지에 저장
                 sessionStorage.setItem("login_token", JSON.stringify(r.data));
                 //상태 변수에 저장 [ 렌더링 하기 위해]
-                setLogin(JSON.parse(localStorage.getItem("login_token")));
-                document.querySelector(".etcDiv").innerHTML = r.data.mname;
+                setLogin(JSON.parse(sessionStorage.getItem("login_token")));
             }else{
 
             }
@@ -40,7 +39,7 @@ export default function Header(props){
             <a href = "/" > Home  </a>
             <a href = "/board/list">게시판</a>
             <a href = "/admin/dashboard" > 관리자모드</a>
-            { login == null ?
+            {login == null ?
                 ( <>
                     <a href = "/member/login" > login</a>
                     <a href = "/member/signup" > signup</a>

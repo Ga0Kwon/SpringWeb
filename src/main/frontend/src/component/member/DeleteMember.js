@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export default function DeleteMember(props){
 
-    /*//실질적인 삭제
+    //실질적인 삭제
     const accountDelete = () => {
        let mpassword = document.querySelector(".mpassword").value;
 
@@ -21,5 +21,5 @@ export default function DeleteMember(props){
          <button type = "button" onClick = {accountDelete}>계정 삭제</button><br/>
     </>)
 
-*/
+
 }

@@ -7,6 +7,10 @@ import ezenweb.web.domain.member.MemberEntity;
 import ezenweb.web.domain.member.MemberEntityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -135,27 +139,37 @@ public class BoardService {
     }
     @Transactional
     //5. 카테고리별 게시물 출력 + 전체 출력
-    public List<BoardDto> list(int cno){
-        log.info("service list" + cno);
+    public PageDto list(int cno, int page){
+        log.info("service list : " + cno);
+        log.info("service list : " + page);
+        //1. pageable 인터페이스 [ 페이지 관련 인터페이스 ] => domain꺼 쓰기!
 
-        List<BoardDto> list = new ArrayList<>();
-        if(cno == 0){//전체 보기
-            List<BoardEntity> boardEntityList =  boardEntityRepository.findAll();
+        Pageable pageable = PageRequest.of(page-1, 10, Sort.by(Sort.Direction.DESC, "bno") );
+        // PageRequest.of(페이지번호[0시작]) -1을 해줘야한다 0부터 시작하니까
+        //size : 총 몇페이지씩
+        //Sort.by(Sort.Direction.DESC, "정렬기준 필드") : 정렬기준 필드를 기준으로 내림차순 정렬
+        Page<BoardEntity> pageEntity;
 
-            boardEntityList.forEach((e) -> { // 엔티티[레코드] 하나씩 반복문
-                list.add(e.toDto()); //엔티티[레코드] 하나씩 Dto 변환후 리스트 담기
-            });
-            return list; //리스트 반환
-
-        }else{//카테고리별 게시물 출력
-            Optional<CategoryEntity> optionalCategoryEntity = categoryEntityRepository.findById(cno);
-            if(optionalCategoryEntity.isPresent()){
-                optionalCategoryEntity.get().getBoardEntityList().forEach((e) -> {
-                    list.add(e.toDto());
-                });
-            }
-            return list;
+        if(cno == 0){ //전체 보기일 경우
+            pageEntity = boardEntityRepository.findAll(pageable);
+        }else{ //카테고리 선택일 경우
+            pageEntity = boardEntityRepository.findBySearch(pageable, cno);
         }
+
+        List<BoardDto> boardDtoList = new ArrayList<BoardDto>();
+
+        pageEntity.forEach((b) -> {
+            boardDtoList.add(b.toDto());
+
+        });
+
+         return PageDto.builder()
+                .boardDtoList(boardDtoList)
+                .totalCount(pageEntity.getTotalElements())
+                .totalPage(pageEntity.getTotalPages())
+                 .cno(cno).page(page)
+                 .build();
+
     }
 
     @Transactional

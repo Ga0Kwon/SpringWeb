@@ -8,15 +8,14 @@ import Category from './Category';
 
 
 export default function Write(props){
-    let cno = 0;
+    let[cno, setCno] = useState(0)
 
     //게시물 쓰기
-
     const setBoard = () => {
         let info = {
             btitle : document.querySelector("#btitle").value,
             bcontent : document.querySelector("#bcontent").value,
-            cno : 1
+            cno : cno //선택된 카테고리 번호
         }
         console.log(info)
 
@@ -36,6 +35,11 @@ export default function Write(props){
             }
         })
     }
+    //카테고리 선택
+
+    const categoryChange2 = (cno) => {
+        setCno(cno);
+    }
 
     const cancelBoard = () => {
 
@@ -43,7 +47,7 @@ export default function Write(props){
 
     return(<>
         <Container>
-            <Category/>
+            <Category categoryChange = {categoryChange2}/>
             <h3>게시물 쓰기</h3>
             <TextField fullWidth id="btitle" className="btitle" label="제목" variant="standard" /><br/>
             <TextField fullWidth id="bcontent" className="bcontent" label="내용"

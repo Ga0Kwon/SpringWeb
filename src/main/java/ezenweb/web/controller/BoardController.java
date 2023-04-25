@@ -3,6 +3,7 @@ package ezenweb.web.controller;
 import ezenweb.example.day06.객체관계.Board;
 import ezenweb.web.domain.board.BoardDto;
 import ezenweb.web.domain.board.CategoryDto;
+import ezenweb.web.domain.board.PageDto;
 import ezenweb.web.domain.member.MemberDto;
 import ezenweb.web.service.BoardService;
 import ezenweb.web.service.MemberService;
@@ -69,9 +70,8 @@ public class BoardController {
 
     //4. 카테고리별 게시물 출력
     @GetMapping("")
-    public List<BoardDto> list(@RequestParam int cno){
-        System.out.println("board list cno : " + cno);
-        List<BoardDto> result = boardService.list(cno);
+    public PageDto list(@RequestParam int cno, @RequestParam int page){
+        PageDto result = boardService.list(cno, page);
         return result;
     }
 

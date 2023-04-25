@@ -2,7 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 
-export default function Find(props){
+export default function InfoFind(props){
 
 /*    const checkView = (value) =>{
         what = value;

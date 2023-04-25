@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 export default function Update(props){
-   /*
+
 
     const onUpdate = () => {
         let info = {
@@ -31,5 +31,5 @@ export default function Update(props){
                 <button type = "button" onClick={onUpdate}>수정</button>
               </form>
         </>
-    )*/
+    )
 }
