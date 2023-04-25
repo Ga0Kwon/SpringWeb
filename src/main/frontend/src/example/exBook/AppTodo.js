@@ -144,6 +144,7 @@ export default function AppTodo(props) {
 
     return (<>
         <div clasName="App">
+            <div>현재페이지 : {page}  TODO 수 : {totalCount}</div>
             {/* Container : 박스권 화면 가운데로 잡아주는 컴포넌트*/}
             <Container maxWidth ="md">
                 <AddTodo addItem ={addItem}/> {/*함수를 전달*/}
