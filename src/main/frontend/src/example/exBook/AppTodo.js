@@ -10,17 +10,24 @@ import {List, Paper, Container} from '@mui/material';
 
 import axios from 'axios'; //npm install axios
 
+import Pagination from '@mui/material/Pagination';
+
 export default function AppTodo(props) {
     //1.
     //item 객체에 { id : "0", title : "Hello world 1",  done : true}
     const[items, setItems] = useState([]);
+    let[page, setPage] = useState(1);
+    let[totalPage, setTotalPage] = useState(1);
+    let[totalCount, setTotalCount] = useState(0);
 
     //재사용을 위해 함수로 따로 만든다.(처음 들어올때, 수정, 삭제, 등록시)
     const getTodo = () =>{
-        axios.get( "/todo" )
+        axios.get( "/todo" , {params: {page : page}} )
             .then( r => {
                 console.log( r.data );
-                setItems( r.data ); // 서버에게 응답받은 리스트를 재렌더링
+                setItems( r.data.todoList ); // 서버에게 응답받은 리스트를 재렌더링
+                setTotalPage(r.data.totalPage)
+                setTotalCount(r.data.totalCount)
             })
     }
 
@@ -50,7 +57,7 @@ export default function AppTodo(props) {
              console.log(r)
         })*/
 
-   }, []) //대괄호를 빼면, 계속 렌더링 무한루프에 빠진다.
+   }, [page]) //대괄호를 빼면, 계속 렌더링 무한루프에 빠진다.
 
 
 
@@ -61,7 +68,7 @@ export default function AppTodo(props) {
         setItems([...items, item]); // 기존 상태 items 에 item 추가
         //item = {title : "입력받은값", id = "ID-배열길이", done : "기본값 false"}
         //setItems([...상태명, 값]); : ... 앞에 추가 : react의 규칙
-        axios.post("http://192.168.219.113:8080/todo", item).then(r => {
+        axios.post("/todo", item).then(r => {
              getTodo();
         })
     }
@@ -73,7 +80,7 @@ export default function AppTodo(props) {
         const newItems = items.filter(i => i.id !== item.id);
             // * 삭제할 id를 제외한 새로운 newItems 배열이 선언
         //setItems([...newItems])
-        axios.delete("http://192.168.219.113:8080/todo", {params : {tno : item.id}}).then(r => {
+        axios.delete("/todo", {params : {tno : item.id}}).then(r => {
              getTodo();
         })
 
@@ -113,6 +120,12 @@ export default function AppTodo(props) {
         setItems([...items]); //재 랜더링
     }
 
+    //페이지 선택
+    const selectPage = (e) => {
+        setPage(e.target.outerText);
+        getTodo()
+    }
+
     //반복문 이용한 Todo 컴포넌트 생성
     let TodoItems =
         /*<Paper style = "maign:16px;"> : HTML 방식*/
@@ -136,6 +149,9 @@ export default function AppTodo(props) {
                 <AddTodo addItem ={addItem}/> {/*함수를 전달*/}
                 {/*data 와 같은 props를 전달할때는 이름 아무거나 해도 된다.*/}
                 {TodoItems}
+                 <div style={{display : "flex", justifyContent : "center", margin : '40px 0px'}}>
+                    <Pagination count={totalPage} color="primary" onClick = {selectPage}/> {/*count : 전체페이지수[TotalPage]*/}
+                </div>
             </Container>
         </div>
     </>);

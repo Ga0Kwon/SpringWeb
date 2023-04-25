@@ -1,5 +1,6 @@
 package ezenweb.web.controller;
 
+import ezenweb.web.domain.todo.PageDto;
 import ezenweb.web.domain.todo.TodoDto;
 import ezenweb.web.service.TodoService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,14 +13,14 @@ import java.util.List;
 @Slf4j //로그 기능 주입
 @RequestMapping("/todo")
 // 해당 컨트롤은 http://localhost:3000 요청 CROS 정책
-@CrossOrigin(origins = "http://192.168.219.113:3000") //리소스를 교차로 지원
+//@CrossOrigin(origins = "http://192.168.219.113:3000") //리소스를 교차로 지원
 public class TodoController {
     @Autowired
     private TodoService todoService;
     @GetMapping("")
-    public List<TodoDto> get(){
-        log.info("get");
-        List<TodoDto> todoList = todoService.getTodo();
+    public PageDto get(@RequestParam int page){
+        log.info("get page : " + page);
+        PageDto todoList = todoService.getTodo(page);
         return todoList;
     }
 

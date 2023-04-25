@@ -1,10 +1,15 @@
 package ezenweb.web.service;
 
+import ezenweb.web.domain.todo.PageDto;
 import ezenweb.web.domain.todo.TodoDto;
 import ezenweb.web.domain.todo.TodoEntity;
 import ezenweb.web.domain.todo.TodoEntityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,15 +38,25 @@ public class TodoService {
 
     //할일 출력
     @Transactional
-    public List<TodoDto> getTodo(){
-        List<TodoDto> list = new ArrayList<TodoDto>();;
-        List<TodoEntity> entity = todoEntityRepository.findAll();
+    public PageDto getTodo(int page){
+        List<TodoDto> todoDtoList = new ArrayList<>();
+
+        Pageable pageable = PageRequest.of(page-1, 5, Sort.by(Sort.Direction.DESC, "id"));
+
+        Page<TodoEntity> entity = todoEntityRepository.findAll(pageable);
+
         System.out.println("service todo get :" + entity);
+
         entity.forEach((e) -> {
-            list.add(e.toDto());
+            todoDtoList.add(e.toDto());
         });
 
-        return list;
+        return PageDto.builder()
+                .totalCount(entity.getTotalElements())
+                .totalPage(entity.getTotalPages())
+                .todoList(todoDtoList)
+                .page(page)
+                .build();
     }
 
     //할일 수정

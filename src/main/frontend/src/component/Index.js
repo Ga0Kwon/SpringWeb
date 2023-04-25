@@ -18,6 +18,8 @@ import BoardWrite from "./board/Write";
 
 import DashBoard from "./admin/DashBoard";
 
+import AppTodo from "../example/exBook/AppTodo";
+
 /*
     React-router-dom 다양한 라우터 컴포넌트 제공
     1. <BrowserRouter> : 가상 URL 관리[URL 동기화]
@@ -44,7 +46,7 @@ export default function Index(props){
                 <Route path = "/board/write" element={<BoardWrite/>}/>
                 <Route path = "/board/category" element={<Category/>}/>
                 <Route path = "/admin/dashboard" element={<DashBoard/>}/>
-
+                <Route path = "/todo/list" element={<AppTodo/>}/>
             </Routes>
 
             <Footer/>{/*푸터는 라우터에 넣지X*/}
