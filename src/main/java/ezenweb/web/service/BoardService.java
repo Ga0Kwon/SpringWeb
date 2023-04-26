@@ -147,7 +147,6 @@ public class BoardService {
         //size : 총 몇페이지씩
         //Sort.by(Sort.Direction.DESC, "정렬기준 필드") : 정렬기준 필드를 기준으로 내림차순 정렬
         Page<BoardEntity> pageEntity = boardEntityRepository.findBySearch(pageable, pageDto.getCno(), pageDto.getKey(), pageDto.getKeyword());
-
         /*if(cno == 0){ //전체 보기일 경우
             pageEntity = boardEntityRepository.findAll(pageable);
         }else{ //카테고리 선택일 경우
@@ -171,6 +170,7 @@ public class BoardService {
 
     @Transactional
     public BoardDto getDetailBoard(int bno){
+        //Page<ReplyEntity> replyEntityPage = replyEntityRepository.findBySearch(pageable, pageDto)
         return boardEntityRepository.findById(bno).get().toDto();
 
     }
@@ -197,11 +197,14 @@ public class BoardService {
     public boolean updateBoard(BoardDto boardDto){
         Optional<BoardEntity> optionalBoardentity = boardEntityRepository.findById(boardDto.getBno());
 
-        if(optionalBoardentity.isPresent()){
+        Optional<CategoryEntity> optionalCategoryEntity = categoryEntityRepository.findById(boardDto.getCno());
+
+        if(optionalBoardentity.isPresent() && optionalCategoryEntity.isPresent()){
             BoardEntity entity = optionalBoardentity.get();
 
             entity.setBtitle(boardDto.getBtitle());
             entity.setBcontent(boardDto.getBcontent());
+            entity.setCategoryEntity(optionalCategoryEntity.get());
 
             return true;
         }

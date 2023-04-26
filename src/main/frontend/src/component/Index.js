@@ -17,6 +17,7 @@ import View from "./board/View";
 import Category from "./board/Category";
 import BoardWrite from "./board/Write";
 import BoardUpdate from "./board/BoardUpdate";
+import ReplyInfo from "./board/Reply";
 
 import DashBoard from "./admin/DashBoard";
 
@@ -47,6 +48,7 @@ export default function Index(props){
                 <Route path = "/board/list" element={<Board/>}/>
                 <Route path = "/board/view/:bno" element={<View/>}/>
                 <Route path = "/board/update/:bno" element={<BoardUpdate/>}/>
+                <Route path = "/board/reply/:bno" element={<ReplyInfo/>}/>
                 <Route path = "/board/write" element={<BoardWrite/>}/>
                 <Route path = "/board/category" element={<Category/>}/>
                 <Route path = "/admin/dashboard" element={<DashBoard/>}/>
