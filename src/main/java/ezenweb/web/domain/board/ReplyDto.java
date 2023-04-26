@@ -14,17 +14,16 @@ public class ReplyDto {
 
     private String rcontent;
 
-    private BoardEntity boardEntity; //게시물 fk
+    private int bno; //게시물 fk
 
-    private MemberEntity memberEntity; //작성자  fk
+    private int mno; //작성자  fk
+
 
     //toEntity[저장용]
     public ReplyEntity toEntity() {
         return ReplyEntity.builder()
                 .rno(this.rno)
                 .rcontent(this.rcontent)
-                .memberEntity(this.memberEntity)
-                .boardEntity(this.boardEntity)
                 .build();
     }
 

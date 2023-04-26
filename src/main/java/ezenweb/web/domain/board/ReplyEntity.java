@@ -1,5 +1,7 @@
 package ezenweb.web.domain.board;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ezenweb.web.domain.member.MemberEntity;
 import ezenweb.web.domain.todo.TodoDto;
 import lombok.*;
@@ -35,8 +37,8 @@ public class ReplyEntity {
         return ReplyDto.builder()
                 .rno(this.rno)
                 .rcontent(this.rcontent)
-                .memberEntity(this.memberEntity)
-                .boardEntity(this.boardEntity)
+                .mno(this.memberEntity.getMno())
+                .bno(this.boardEntity.getBno())
                 .build();
     }
 }

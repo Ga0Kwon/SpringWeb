@@ -26,7 +26,7 @@ export default function Reply(props) {
    const updateReply = props.updateReply
 
     const turnOffReadOnly = () => {
-        if(login.mno == props.mno){ // 자기가 쓴 댓글의 경우
+        if(login.mno == reply.mno){ // 자기가 쓴 댓글의 경우
             setReadOnly(false); //읽기모드 해제
         }
     }
@@ -48,16 +48,11 @@ export default function Reply(props) {
         updateReply();
     }
 
-    const delteBtnView = () => {
-        let replyInfo = JSON.parse(reply.memberEntity);
+    const delteBtnView = login.mno == reply.mno ?
+        <IconButton onClick = {deleteEventHandler}><DeleteOutlined/></IconButton>
+        : <div></div>
 
-        if(login.mno == replyInfo.mno){
-            return <IconButton onClick = {deleteEventHandler}><DeleteOutlined/></IconButton>;
-        }else{
-            return <div></div>;
-        }
 
-    }
 
     return (<>
             <ListItem>

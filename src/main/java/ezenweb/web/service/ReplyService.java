@@ -46,15 +46,27 @@ public class ReplyService {
 
         MemberDto loginDto = (MemberDto) o;
         Optional<MemberEntity> memberEntity = memberEntityRepository.findById(((MemberDto) o).getMno());
+        Optional<BoardEntity> boardEntity = boardEntityRepository.findById(replyDto.getBno());
+        if(memberEntity.isPresent()&& boardEntity.isPresent()){
 
-        if(memberEntity.isPresent()){
-            replyDto.setMemberEntity(memberEntity.get());
+            replyDto.setMno(memberEntity.get().getMno());
+            replyDto.setBno(boardEntity.get().getBno());
+
             ReplyEntity entity = replyEntityRepository.save(replyDto.toEntity());
+
+            // board <-> reply
+            boardEntity.get().getReplyEntityList().add( entity );
+            entity.setBoardEntity( boardEntity.get() );
+
+            //member <-> reply
+            memberEntity.get().getReplyEntityList().add( entity );
+            entity.setMemberEntity( memberEntity.get() );
 
             if(entity.getRno() > 0){
                 return 0;
             }
         }
+
 
         return 2; //등록실패
     }
@@ -72,10 +84,11 @@ public class ReplyService {
         System.out.println("service reply get :" + entity);
 
         entity.forEach((e) -> {
+            System.out.println(e.toDto());
             replyDtoList.add(e.toDto());
         });
 
-        System.out.println(replyDtoList);
+        System.out.println("댓글 출력" + replyDtoList);
 
         return ReplyPageDto.builder()
                 .totalCount(entity.getTotalElements())

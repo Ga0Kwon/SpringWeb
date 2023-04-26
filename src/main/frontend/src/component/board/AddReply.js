@@ -4,7 +4,7 @@ import {Container} from '@mui/material'
 import {Button, Grid, TextField} from '@mui/material';
 import {useParams} from 'react-router-dom';
 
-export default function AddTodo(props) {
+export default function AddReply(props) {
     const params = useParams(); //useParams() 훅 : 경로[URL]상의 매개변수 반환
     const [reply, setReply] = useState({rcontent : "", bno : ""}) //초기값 깡통
 
@@ -31,7 +31,7 @@ export default function AddTodo(props) {
      return(<>
             {/*style {}안에 지정할때 하이픈(-)안쓰고 카멜표기법을 사용*/}
             <Grid container style = {{marginTop : 20}}>
-                <Grid xs ={5} md = {5} item style = {{paddingRight:16}}>
+                <Grid xs ={11} md = {11} item style = {{paddingRight:16}}>
                     <TextField
                     placeholder ="댓글 작성"
                     fullWidth

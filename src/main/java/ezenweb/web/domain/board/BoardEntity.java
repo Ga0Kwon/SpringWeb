@@ -1,5 +1,6 @@
 package ezenweb.web.domain.board;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ezenweb.web.domain.BaseTime;
 import ezenweb.web.domain.member.MemberEntity;
 import lombok.*;

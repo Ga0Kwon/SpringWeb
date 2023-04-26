@@ -8,11 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReplyEntityRepository extends JpaRepository<ReplyEntity, Integer> {
-    @Query(value="select * " +
-            "from reply " +
-            "where bno = :bno)"
-            // IF (조건, 참, 거짓IF(조건, 참, 거짓))
-            , nativeQuery = true)
+    @Query(value="select * from reply where bno = :bno", nativeQuery = true)
     Page<ReplyEntity> findBySearch(Pageable pageable, int bno);
 
 }

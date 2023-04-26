@@ -31,7 +31,7 @@ export default function AppReply(props){
 
     useEffect(() => {
         getReply();
-    },[])
+    },[pageInfo])
 
     //댓글 추가
     const addReply = (item) => {
@@ -94,7 +94,7 @@ export default function AppReply(props){
                    <AddReply addReply ={addReply}/>
                    {totalReplys}
                     <div style={{display : "flex", justifyContent : "center", margin : '40px 0px'}}>
-                       <Pagination count={totalPage} color="primary" onClick = {selectPage}/> {/*count : 전체페이지수[TotalPage]*/}
+                       <Pagination count={totalPage} color="primary" onChange = {selectPage}/> {/*count : 전체페이지수[TotalPage]*/}
                    </div>
                </Container>
            </div>
