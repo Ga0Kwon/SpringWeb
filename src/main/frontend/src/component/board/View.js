@@ -4,6 +4,8 @@ import {useParams} from 'react-router-dom'; //HTTP 경로 상의 매개변수 �
 
 import {Container} from '@mui/material'
 
+import ReplyList from './AppReply';
+
 export default function View(props){
     const [board, setBoard] = useState({});
 
@@ -60,6 +62,7 @@ export default function View(props){
                 <h3>제목</h3> {board.btitle}
            </div>
            { btnBox }
+           <ReplyList/>
         </Container>
     </>)
 }

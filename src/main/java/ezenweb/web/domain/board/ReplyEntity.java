@@ -1,6 +1,7 @@
 package ezenweb.web.domain.board;
 
 import ezenweb.web.domain.member.MemberEntity;
+import ezenweb.web.domain.todo.TodoDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,4 +30,13 @@ public class ReplyEntity {
     @ToString.Exclude
     private MemberEntity memberEntity; //작성자  fk
 
+    //toDto[출력용]
+    public ReplyDto toDto(){
+        return ReplyDto.builder()
+                .rno(this.rno)
+                .rcontent(this.rcontent)
+                .memberEntity(this.memberEntity)
+                .boardEntity(this.boardEntity)
+                .build();
+    }
 }
