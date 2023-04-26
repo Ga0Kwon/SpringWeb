@@ -13,6 +13,7 @@ import InfoFind from "./member/InfoFind";
 import DeleteMember from "./member/DeleteMember";
 
 import Board from "./board/List";
+import View from "./board/View";
 import Category from "./board/Category";
 import BoardWrite from "./board/Write";
 
@@ -43,6 +44,7 @@ export default function Index(props){
                 <Route path = "/member/update" element={<Update/>}/>
                 <Route path = "/member/deleteMember" element={<DeleteMember/>}/>
                 <Route path = "/board/list" element={<Board/>}/>
+                <Route path = "/board/view/:bno" element={<View/>}/>
                 <Route path = "/board/write" element={<BoardWrite/>}/>
                 <Route path = "/board/category" element={<Category/>}/>
                 <Route path = "/admin/dashboard" element={<DashBoard/>}/>

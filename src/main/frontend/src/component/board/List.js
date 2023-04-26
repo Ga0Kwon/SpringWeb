@@ -111,7 +111,7 @@ export default function List(props){
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell component ="th" align="center" scope="row">{row.bno}</TableCell>
-                      <TableCell component ="th" align="left">{row.btitle}</TableCell>
+                      <TableCell component ="th" align="left"><a href = {'/board/view/'+row.bno}>{row.btitle}</a></TableCell>
                       <TableCell component ="th" align="center">{row.memail}</TableCell>
                       <TableCell component ="th" align="center">{row.bdate}</TableCell>
                       <TableCell component ="th" align="center">{row.bview}</TableCell>
