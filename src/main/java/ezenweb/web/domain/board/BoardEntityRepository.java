@@ -22,8 +22,17 @@ public interface BoardEntityRepository extends JpaRepository<BoardEntity, Intege
             //%% : 전체를 의미함. => 전체 출력
     @Query(value="select * " +
             "from board " +
-            "where if(:cno = 0 , cno like '%%', cno = :cno)"
+            "where if(:cno = 0 , cno like '%%', cno = :cno) and " +
+            "IF(:key = '', true, " +
+            "IF(:key = 'btitle', btitle like %:keyword%, bcontent like %:keyword%))"
+            // IF (조건, 참, 거짓IF(조건, 참, 거짓))
             , nativeQuery = true)
-    Page<BoardEntity> findBySearch(Pageable pageable, int cno); //Pageable pageable : 자동으로 검색
+    Page<BoardEntity> findBySearch(Pageable pageable, int cno, String key, String keyword); //Pageable pageable : 자동으로 검색
 
+    //1. 동일한 cno 찾기
+        //select * from board where cno = ?
+
+    //2. 동일한 필드에서 검색어[like 연산자] 찾기
+        //select * from board where btitle = ?
+        //select * from board where bcontent = ?
 }

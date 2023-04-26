@@ -20,6 +20,11 @@ public class PageDto {//페이지와 관련된 정보
     List<BoardDto> boardDtoList;
     //4. 현재 페이지번호
     private int page;
-    //4. 현재 카테고리 번호
+    //5. 현재 카테고리 번호
     private int cno;
+
+    //6. 선택한 key
+    private String key;
+    //7. 검색한 keyword
+    private String keyword;
 }

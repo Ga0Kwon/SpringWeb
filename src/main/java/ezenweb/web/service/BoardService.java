@@ -139,16 +139,14 @@ public class BoardService {
     }
     @Transactional
     //5. 카테고리별 게시물 출력 + 전체 출력
-    public PageDto list(int cno, int page){
-        log.info("service list : " + cno);
-        log.info("service list : " + page);
+    public PageDto list(PageDto pageDto){
         //1. pageable 인터페이스 [ 페이지 관련 인터페이스 ] => domain꺼 쓰기!
 
-        Pageable pageable = PageRequest.of(page-1, 5, Sort.by(Sort.Direction.DESC, "bno") );
+        Pageable pageable = PageRequest.of(pageDto.getPage()-1, 5, Sort.by(Sort.Direction.DESC, "bno") );
         // PageRequest.of(페이지번호[0시작]) -1을 해줘야한다 0부터 시작하니까
         //size : 총 몇페이지씩
         //Sort.by(Sort.Direction.DESC, "정렬기준 필드") : 정렬기준 필드를 기준으로 내림차순 정렬
-        Page<BoardEntity> pageEntity = boardEntityRepository.findBySearch(pageable, cno);
+        Page<BoardEntity> pageEntity = boardEntityRepository.findBySearch(pageable, pageDto.getCno(), pageDto.getKey(), pageDto.getKeyword());
 
         /*if(cno == 0){ //전체 보기일 경우
             pageEntity = boardEntityRepository.findAll(pageable);
@@ -163,12 +161,11 @@ public class BoardService {
 
         });
 
-         return PageDto.builder()
-                .boardDtoList(boardDtoList)
-                .totalCount(pageEntity.getTotalElements())
-                .totalPage(pageEntity.getTotalPages())
-                 .cno(cno).page(page)
-                 .build();
+        pageDto.setBoardDtoList(boardDtoList);
+        pageDto.setTotalPage(pageEntity.getTotalPages());
+        pageDto.setTotalCount(pageEntity.getTotalElements());
+
+        return pageDto;
 
     }
 

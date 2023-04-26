@@ -24,7 +24,7 @@ export default function List(props){
     //usState함수를 이용한 값[배열] = [필드명, set필드명]
 
     let [rows, setRows] = useState([])
-    let[pageInfo, setPageInfo] = useState({"cno" : 0, "page" : 1})
+    let[pageInfo, setPageInfo] = useState({"cno" : 0, "page" : 1, "key" : '', "keyword" : ''})
     let[totalPage, setTotalPage] = useState(1);
     let[totalCount, setTotalCount] = useState(0);
 
@@ -64,15 +64,27 @@ export default function List(props){
 
 
     //4. 페이지 번호
-    const selectPage = (e) => {
+    const selectPage = (event, value) => {
 /*        console.log(e.target)
         console.log(e.target.value) //button이여서 value 속성 없음
         console.log(e.target.outerText)
         console.log(e.target.outerText) // Tag 밖에있는 Text 출력 [해당 페이징 버튼의 번호가 Tag밖에 있다]*/
-        pageInfo.page = e.target.outerText;
-        setPageInfo({...pageInfo})
+        console.log(value)
+        pageInfo.page = value; //클릭된 페이지 번호를 가져와서 상태변수에 대입
+        setPageInfo({...pageInfo}) //클릭된 페이지번호를 상태변수에 저장
     }
 
+    //검색
+        //const 상수 vs. let 변수
+        // 왜?? const
+    const onSearch = () =>{
+        pageInfo.key = document.querySelector('.key').value;
+        pageInfo.keyword = document.querySelector('.keyword').value;
+        pageInfo.page = 1;
+        console.log("key : " + pageInfo.key + " " + "keyword : " + pageInfo.keyword)
+
+        setPageInfo({...pageInfo})
+    }
 
     return(<>
         <Container>
@@ -108,8 +120,17 @@ export default function List(props){
                 </TableBody>
               </Table>
             </TableContainer>
+            <div class ="searchBox" style={{display : "flex", justifyContent : "center", margin : '40px 0px'}}>
+                 <select className ="key">
+                     <option value = "btitle">제목</option>
+                     <option value = "bcontent">내용</option>
+                 </select>
+                 <input type = "text" className = "keyword"/>
+                 <button type = "button" onClick={onSearch}>검색</button>
+             </div>
             <div style={{display : "flex", justifyContent : "center", margin : '40px 0px'}}>
-                <Pagination count={totalPage} color="primary" onClick = {selectPage}/> {/*count : 전체페이지수[TotalPage]*/}
+                {/*count : 전체페이지수[TotalPage] page : 현재 보고 있는 페이지 [value]*/}
+                <Pagination count={totalPage} page = {pageInfo.page} color="primary" onChange = {selectPage}/>
             </div>
           </Container>
     </>)
