@@ -85,7 +85,9 @@ public class BoardController {
     //수정
     @PutMapping("")
     public boolean update(@RequestBody BoardDto dto){
-        return false;
+        System.out.println(dto.toString());
+        boolean result = boardService.updateBoard(dto);
+        return result;
     }
 
     @DeleteMapping("")

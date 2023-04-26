@@ -191,5 +191,22 @@ public class BoardService {
         }
         return 1; //해당 게시물 정보가 없을 경우
     }
+    
+    //게시물 수정
+    @Transactional
+    public boolean updateBoard(BoardDto boardDto){
+        Optional<BoardEntity> optionalBoardentity = boardEntityRepository.findById(boardDto.getBno());
+
+        if(optionalBoardentity.isPresent()){
+            BoardEntity entity = optionalBoardentity.get();
+
+            entity.setBtitle(boardDto.getBtitle());
+            entity.setBcontent(boardDto.getBcontent());
+
+            return true;
+        }
+
+        return false;
+    }
 
 }

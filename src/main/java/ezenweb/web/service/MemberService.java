@@ -104,6 +104,9 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
         }else{ // 두번째 방문 시 수정 처리
             entity.get().setMname(name); //이메일은 바꿀일이 없기 때문에 이름만 수정
         }
+
+        memberDto.setMno(entity.get().getMno()); //회원번호 넣어주기
+
         return memberDto; //rolesList OAuth2를 구현했으니까 return 가능
     }
 
