@@ -6,6 +6,8 @@ import {Container} from '@mui/material'
 
 import ReplyList from './ReplyList';
 
+import OneWayAppReply from './OneWayAppReply'
+
 export default function View(props){
     const [board, setBoard] = useState({replyDtoList : []}); //board 안에 replyDtoList이 들어있다.
 
@@ -58,23 +60,23 @@ export default function View(props){
             rcontent : rcontent,
             bno : board.bno
         }
-        console.log(info);
+       console.log(info);
 
         axios.post("/board/reply", info).then((r) => {
                if(r.data == 0){
                    alert('댓글이 등록되었습니다.');
-                   setBoard({...board});
+                  setBoard({...board});
                    getBoard()//재렌더링
                }else if(r.data == 1){
                    alert('로그인한 사용자만 댓글 입력이 가능합니다. 로그인해주세요.')
                    window.location.href = "/member/login"
                }else if(r.data == 2){
                    alert('댓글이 등록에 실패하였습니다. 관리자에게 문의해주세요.')
-               }else if(r.data == 3){
+              }else if(r.data == 3){
                     alert('해당 게시물에 댓글을 작성할 수 없습니다.')
-               }
+              }
          })
-    }
+   }
 
     const onReplyDelete = (rno) => {
          axios.delete("/board/reply", {params : {rno : rno}})
@@ -84,7 +86,7 @@ export default function View(props){
                 getBoard();
             }else{
                 alert('삭제 실패하였습니다.')
-            }
+           }
         })
     }
 
@@ -113,9 +115,12 @@ export default function View(props){
         <Container>
            <div>
                 <h3>제목</h3> {board.btitle}
+                <br/>
+                <h3>내용</h3>{board.bcontent}
            </div>
            { btnBox }
            <ReplyList onReplyWrite = {onReplyWrite} onReplyDelete = {onReplyDelete} onReplyUpdate = {onReplyUpdate} replyList = {board.replyDtoList}/>
+           {/*<ReplyList onReplyWrite = {onReplyWrite} onReplyDelete = {onReplyDelete} onReplyUpdate = {onReplyUpdate} replyDtoList = {board.replyDtoList}/>*/}
         </Container>
     </>)
 }

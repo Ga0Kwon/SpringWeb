@@ -5,21 +5,21 @@ import {useParams} from 'react-router-dom'; //HTTP 경로 상의 매개변수 �
 import {List, Paper, Container} from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 
-import AddReply from './AddReply';
-import Reply from './Reply';
+import OneWayAddReply from './OneWayAddReply';
+import OneWayReply from './OneWayReply';
 
-export default function AppReply(props){
+export default function OneWayAppReply(props){
     const params = useParams(); //useParams() 훅 : 경로[URL]상의 매개변수 반환
     console.log("bno : " + params.bno)
     const[items, setItems] = useState([]);
-    const[pageInfo, setPageInfo] = useState({"bno" : params.bno, "page" : 1});
+    const[pageInfo, setPageInfo] = useState({"bno" : params.bno, "page" : 1, "rindex" : 0});
     let[totalPage, setTotalPage] = useState(1);
     let[totalCount, setTotalCount] = useState(0);
 
 
     const getReply = () => {
         console.log(pageInfo)
-        axios.get("/reply", {params : pageInfo})
+        axios.get("/onewayReply", {params : pageInfo})
         .then(r => {
             console.log(r.data);
             console.log(r.data.replyDtoList);
@@ -38,7 +38,7 @@ export default function AppReply(props){
         item.bno = params.bno;
         setItems([...items, items]);
         console.log("댓글 추가" + item.bno)
-        axios.post("/reply", item)
+        axios.post("/onewayReply", item)
         .then(r => {
             if(r.data == 0){
                 alert('댓글이 등록되었습니다.');
@@ -57,7 +57,7 @@ export default function AppReply(props){
     const deleteReply = (rp) => {
         console.log(rp.rno);
 
-        axios.delete("/reply", {params : {rno : rp.rno}})
+        axios.delete("/onewayReply", {params : {rno : rp.rno}})
         .then(r => {
             getReply();
         })
@@ -77,7 +77,7 @@ export default function AppReply(props){
     let totalReplys = <Paper style = {{margin:16}}>  {/*JSX의 style 속성 방법 중괄호 두번*/}
                                   <List>{
                                       items.map((i) =>
-                                       <Reply
+                                       <OneWayReply
                                          item ={i}
                                          key = {i.rno}
                                          deleteReply = {deleteReply}
@@ -91,7 +91,7 @@ export default function AppReply(props){
            <div clasName="App">
                <div>페이지 수 : {pageInfo.page}  댓글 수 : {totalCount}</div>
                <Container maxWidth ="md">
-                   <AddReply addReply ={addReply}/>
+                   <OneWayAddReply addReply ={addReply}/>
                    {totalReplys}
                     <div style={{display : "flex", justifyContent : "center", margin : '40px 0px'}}>
                        <Pagination count={totalPage} color="primary" onChange = {selectPage}/> {/*count : 전체페이지수[TotalPage]*/}

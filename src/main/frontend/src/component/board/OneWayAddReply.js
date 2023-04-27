@@ -4,7 +4,7 @@ import {Container} from '@mui/material'
 import {Button, Grid, TextField} from '@mui/material';
 import {useParams} from 'react-router-dom';
 
-export default function AddReply(props) {
+export default function OneWayAddReply(props) {
     const params = useParams(); //useParams() 훅 : 경로[URL]상의 매개변수 반환
     const [reply, setReply] = useState({rcontent : "", bno : ""}) //초기값 깡통
 

@@ -24,6 +24,5 @@ public class ReplyPageDto {
 
     private int bno; //어떤 게시물인지.
 
-    MemberDto memberDto; //댓글 작성자 정보
 
 }

@@ -9,7 +9,7 @@ import {Container} from '@mui/material'
 import axios from 'axios';
 
 
-export default function Reply(props) {
+export default function OneWayReply(props) {
     const [reply, setReply] = useState(props.item);
 
     const[readOnly, setReadOnly] = useState(true); //읽기모드
@@ -36,7 +36,7 @@ export default function Reply(props) {
              console.log("turnOnReadOnly")
              setReadOnly(true);
              //엔터를 칠때 수정이 완료된 것.
-             axios.put("/reply",  reply).then(r => {
+             axios.put("/onewayReply",  reply).then(r => {
                 updateReply();
              })
         }
@@ -48,7 +48,7 @@ export default function Reply(props) {
         updateReply();
     }
 
-    const delteBtnView = login.mno == reply.mno ?
+    const deleteBtnView = login.mno == reply.mno ?
         <IconButton onClick = {deleteEventHandler}><DeleteOutlined/></IconButton>
         : <div></div>
 
@@ -70,7 +70,7 @@ export default function Reply(props) {
                 </ListItemText>
 
                 <ListItemSecondaryAction>
-                    {delteBtnView}
+                    {deleteBtnView}
                 </ListItemSecondaryAction>
             </ListItem>
         </>)

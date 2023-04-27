@@ -44,6 +44,7 @@ public class ReplyEntity extends BaseTime {
                 .rno(this.rno)
                 .rcontent(this.rcontent)
                 .rdate(this.cdate.toLocalDate().toString())
+                .rindex(this.rindex)
                 //cdate[LocalDateTime] rdate[String] => objectMapper이 LocalDateTime 지원을 안해서 toString()
                 .build();
     }
