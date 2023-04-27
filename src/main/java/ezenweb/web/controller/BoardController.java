@@ -82,6 +82,7 @@ public class BoardController {
     public BoardDto getDetailBoard(@RequestParam int bno){
         System.out.println("getDetailBoard bno : " + bno);
         BoardDto result = boardService.getDetailBoard(bno);
+        System.out.println("게시물 정보 다 출력한다!!!!! " + result);
         return result;
     }
     //수정

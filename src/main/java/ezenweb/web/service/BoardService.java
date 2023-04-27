@@ -1,6 +1,7 @@
 package ezenweb.web.service;
 
 import ezenweb.example.day06.객체관계.Board;
+import ezenweb.example.day06.객체관계.Member;
 import ezenweb.web.domain.board.*;
 import ezenweb.web.domain.member.MemberDto;
 import ezenweb.web.domain.member.MemberEntity;
@@ -177,11 +178,13 @@ public class BoardService {
        if(optionalBoardEntity.isPresent()){
            BoardEntity boardEntity = optionalBoardEntity.get();
 
-
            List<ReplyDto> replyDtoList = new ArrayList<ReplyDto>();
            //댓글 같이 형변환[toDto vs. 서비스]
            boardEntity.getReplyEntityList().forEach((r) -> {
-               replyDtoList.add(r.toDto());
+               ReplyDto dto = r.toDto();
+               dto.setMemberDto(retrunMemberDto(r.getMemberEntity().getMno()));
+               System.out.println("회원정보 장착!!! "+ dto);
+               replyDtoList.add(dto);
            });
 
            BoardDto boardDto = boardEntity.toDto();
@@ -192,6 +195,11 @@ public class BoardService {
 
         return null;
 
+    }
+    
+    //멤버 정보 받아오기
+    public MemberDto retrunMemberDto(int mno){
+        return memberEntityRepository.findById(mno).get().toDto();
     }
 
     @Transactional
@@ -236,7 +244,7 @@ public class BoardService {
     public int postReply(@RequestBody ReplyDto replyDto){
 
         //0. 로그인 했는지 [댓글 작성자]
-        MemberDto o = (MemberDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if(o.equals("anonymousUser")){ //등록 불가
             return 1; //로그인 안했다.
@@ -248,9 +256,11 @@ public class BoardService {
         if(!optionalBoardEntity.isPresent()){ //댓글 작성한 게시물이 없으면
             return 3;
         }
-        
+
+        MemberDto memberDto = (MemberDto) o; //위에서 한꺼번에하면 에러 발생함.
+
         //로그인한 회원 정보 가져오기
-        Optional<MemberEntity> memberEntity = memberEntityRepository.findById(o.getMno());
+        Optional<MemberEntity> memberEntity = memberEntityRepository.findById(memberDto.getMno());
 
         //1. 댓글 작성한다.
         ReplyEntity replyEntity = replyEntityRepository.save(replyDto.toEntity());
