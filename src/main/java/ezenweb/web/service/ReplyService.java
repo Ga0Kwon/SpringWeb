@@ -36,7 +36,7 @@ public class ReplyService {
     //댓글 등록
     @Transactional
     public int writeReply(ReplyDto replyDto){
-        log.info("service replyDto post : " +replyDto );
+        /*log.info("service replyDto post : " +replyDto );
 
         Object o =
                 SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -46,7 +46,7 @@ public class ReplyService {
 
         MemberDto loginDto = (MemberDto) o;
         Optional<MemberEntity> memberEntity = memberEntityRepository.findById(((MemberDto) o).getMno());
-        Optional<BoardEntity> boardEntity = boardEntityRepository.findById(replyDto.getBno());
+        //Optional<BoardEntity> boardEntity = boardEntityRepository.findById(replyDto.getBno());
         if(memberEntity.isPresent()&& boardEntity.isPresent()){
 
             replyDto.setMno(memberEntity.get().getMno());
@@ -65,7 +65,7 @@ public class ReplyService {
             if(entity.getRno() > 0){
                 return 0;
             }
-        }
+        }*/
 
 
         return 2; //등록실패

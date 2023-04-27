@@ -4,6 +4,7 @@ import ezenweb.example.day06.객체관계.Board;
 import ezenweb.web.domain.board.BoardDto;
 import ezenweb.web.domain.board.CategoryDto;
 import ezenweb.web.domain.board.PageDto;
+import ezenweb.web.domain.board.ReplyDto;
 import ezenweb.web.domain.member.MemberDto;
 import ezenweb.web.service.BoardService;
 import ezenweb.web.service.MemberService;
@@ -76,6 +77,7 @@ public class BoardController {
         return result;
     }
 
+    //게시물 개별 출력
     @GetMapping("/getBoard")
     public BoardDto getDetailBoard(@RequestParam int bno){
         System.out.println("getDetailBoard bno : " + bno);
@@ -96,5 +98,29 @@ public class BoardController {
         int result = boardService.deleteBoard(bno);
         return result;
     }
-
+    
+    //댓글 작성[C]
+    @PostMapping("/reply")
+    public int postReply(@RequestBody ReplyDto replyDto){
+        log.info("postReply : " + replyDto.toString());
+        return boardService.postReply(replyDto);
+    }
+    // 댓글 출력[R] => 할필요 X => 게시물과 같이 갈거니까
+    @GetMapping("/reply")
+    public boolean getReply(){
+        log.info("getReply : ");
+        return true;
+    }
+    // 댓글수정 [U]
+    @PutMapping("/reply")
+    public boolean putReply(@RequestBody ReplyDto replyDto){
+        log.info("putReply : " + replyDto.toString());
+        return boardService.putReply(replyDto);
+    }
+    // 댓글 삭제 [D]
+    @DeleteMapping("/reply")
+    public boolean deleteReply(@RequestParam int rno){
+        log.info("deleteReply : " + rno);
+        return boardService.deleteReply(rno);
+    }
 }

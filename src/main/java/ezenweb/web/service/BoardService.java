@@ -13,8 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -168,10 +167,30 @@ public class BoardService {
 
     }
 
+    //게시물 개별 조회/출력 + 댓글 출력
+    // => 댓글 출력은 게시물 조회에서만 하니까 toDto가 아닌 여기서 처리한다. or toDto()를 따로 만드는것
     @Transactional
     public BoardDto getDetailBoard(int bno){
         //Page<ReplyEntity> replyEntityPage = replyEntityRepository.findBySearch(pageable, pageDto)
-        return boardEntityRepository.findById(bno).get().toDto();
+       Optional<BoardEntity> optionalBoardEntity = boardEntityRepository.findById(bno);
+
+       if(optionalBoardEntity.isPresent()){
+           BoardEntity boardEntity = optionalBoardEntity.get();
+
+
+           List<ReplyDto> replyDtoList = new ArrayList<ReplyDto>();
+           //댓글 같이 형변환[toDto vs. 서비스]
+           boardEntity.getReplyEntityList().forEach((r) -> {
+               replyDtoList.add(r.toDto());
+           });
+
+           BoardDto boardDto = boardEntity.toDto();
+           boardDto.setReplyDtoList(replyDtoList); //댓글 목록을 담아서
+
+           return boardDto;
+       }
+
+        return null;
 
     }
 
@@ -211,5 +230,66 @@ public class BoardService {
 
         return false;
     }
+    
+    //댓글작성
+    @Transactional
+    public int postReply(@RequestBody ReplyDto replyDto){
 
+        //0. 로그인 했는지 [댓글 작성자]
+        MemberDto o = (MemberDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(o.equals("anonymousUser")){ //등록 불가
+            return 1; //로그인 안했다.
+        }
+
+        //0. 댓글 작성한 게시물 호출
+        Optional<BoardEntity>  optionalBoardEntity = boardEntityRepository.findById(replyDto.getBno());
+
+        if(!optionalBoardEntity.isPresent()){ //댓글 작성한 게시물이 없으면
+            return 3;
+        }
+        
+        //로그인한 회원 정보 가져오기
+        Optional<MemberEntity> memberEntity = memberEntityRepository.findById(o.getMno());
+
+        //1. 댓글 작성한다.
+        ReplyEntity replyEntity = replyEntityRepository.save(replyDto.toEntity());
+
+        if(replyEntity.getRno() < 1){ //1보다 작으면 저장X
+            return 2;
+        }
+
+        //2. 댓글과 회원의 양방향 관계 [ 댓글 -> 회원 / 회원 -> 댓글 == 양방향, 댓글 -> 회원 == 단방향]
+        replyEntity.setMemberEntity(memberEntity.get());
+        memberEntity.get().getReplyEntityList().add(replyEntity); //member에 댓글 작성한거 추가 넣기
+
+        //3. 댓글과 게시물의 양방향 관계
+        replyEntity.setBoardEntity(optionalBoardEntity.get());
+        optionalBoardEntity.get().getReplyEntityList().add(replyEntity);
+
+        return 0;
+    }
+
+    // 댓글수정 [U]
+    @Transactional
+    public boolean putReply(@RequestBody ReplyDto replyDto){ // {rno : "수정할 번호", rcontent : "수정할 내용"
+        Optional<ReplyEntity> replyEntityOptional = replyEntityRepository.findById(replyDto.getRno());
+
+        if(replyEntityOptional.isPresent()){
+            replyEntityOptional.get().setRcontent(replyDto.getRcontent());
+            return true;
+        }
+        return false;
+    }
+    // 댓글 삭제 [D]
+    @Transactional
+    public boolean deleteReply(@RequestParam int rno){ // {rno : "삭제할 번호"}
+        Optional<ReplyEntity> replyEntityOptional = replyEntityRepository.findById(rno);
+
+        if(replyEntityOptional.isPresent()){
+            replyEntityRepository.delete(replyEntityOptional.get());
+            return true;
+        }
+        return false;
+    }
 }

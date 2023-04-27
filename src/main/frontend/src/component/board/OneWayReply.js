@@ -9,7 +9,7 @@ import {Container} from '@mui/material'
 import axios from 'axios';
 
 
-export default function Reply(props) {
+export default function OneWayReply(props) {
     const [reply, setReply] = useState(props.item);
 
     const[readOnly, setReadOnly] = useState(true); //읽기모드

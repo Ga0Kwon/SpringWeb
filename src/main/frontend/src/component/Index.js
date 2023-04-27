@@ -18,7 +18,7 @@ import Category from "./board/Category";
 import BoardWrite from "./board/Write";
 import BoardUpdate from "./board/BoardUpdate";
 
-import AppReply from "./board/AppReply";
+import ReplyList from "./board/ReplyList";
 
 import DashBoard from "./admin/DashBoard";
 

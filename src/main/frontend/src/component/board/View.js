@@ -4,10 +4,10 @@ import {useParams} from 'react-router-dom'; //HTTP 경로 상의 매개변수 �
 
 import {Container} from '@mui/material'
 
-import ReplyList from './AppReply';
+import ReplyList from './ReplyList';
 
 export default function View(props){
-    const [board, setBoard] = useState({});
+    const [board, setBoard] = useState({}); //board 안에 replyDtoList이 들어있다.
 
     const params = useParams(); //useParams() 훅 : 경로[URL]상의 매개변수 반환
     /*console.log("params : "+ params.bno)*/
@@ -20,7 +20,7 @@ export default function View(props){
         } ).catch(err => {
             console.log(err)
         })
-    }, [])
+    }, [board]) //setBoard 할때마다 실행되는 useEffect
 
     //게시물 삭제
     const onDelete = () => {
@@ -49,12 +49,34 @@ export default function View(props){
 
     const[login, setLogin] = useState(JSON.parse(sessionStorage.getItem("login_token")));
 
+    //댓글 작성시 렌더링
+    const onReplyWrite = (rcontent) => {
+        let info = {
+            rcontent : rcontent,
+            bno : board.bno
+        }
+        console.log(info);
+
+        axios.post("/board/reply", info).then((r) => {
+               if(r.data == 0){
+                   alert('댓글이 등록되었습니다.');
+                   setBoard({...board}); //재렌더링
+               }else if(r.data == 1){
+                   alert('로그인한 사용자만 댓글 입력이 가능합니다. 로그인해주세요.')
+                   window.location.href = "/member/login"
+               }else if(r.data == 2){
+                   alert('댓글이 등록에 실패하였습니다. 관리자에게 문의해주세요.')
+               }else if(r.data == 3){
+                    alert('해당 게시물에 댓글을 작성할 수 없습니다.')
+               }
+         })
+
+    }
+
     //1. 현재 로그인된 회원이 들어왔으면
     const btnBox = login != null && login.mno == board.mno ?
                 <div> <button type = "button" onClick = {onDelete}>삭제</button><button type = "button" onClick = {onUpdate}>수정</button></div>
                 : <div></div> ;
-
-
 
     return (<>
         <Container>
@@ -62,7 +84,7 @@ export default function View(props){
                 <h3>제목</h3> {board.btitle}
            </div>
            { btnBox }
-           <ReplyList/>
+           <ReplyList onReplyWrite = {onReplyWrite} replyList = {board.replyDtoList}/>
         </Container>
     </>)
 }

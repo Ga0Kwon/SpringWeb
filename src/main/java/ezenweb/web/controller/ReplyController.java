@@ -1,9 +1,8 @@
+
 package ezenweb.web.controller;
 
 import ezenweb.web.domain.board.ReplyDto;
 import ezenweb.web.domain.board.ReplyPageDto;
-import ezenweb.web.domain.todo.PageDto;
-import ezenweb.web.domain.todo.TodoDto;
 import ezenweb.web.service.ReplyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
-@RequestMapping("/reply")
+@RequestMapping("/onewayReply")
 public class ReplyController {
     @Autowired
     private ReplyService replyService;
@@ -48,3 +47,4 @@ public class ReplyController {
 
 
 }
+

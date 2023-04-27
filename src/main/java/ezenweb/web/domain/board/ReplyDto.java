@@ -1,10 +1,7 @@
 package ezenweb.web.domain.board;
 
-import ezenweb.web.domain.member.MemberEntity;
-import ezenweb.web.domain.todo.TodoEntity;
 import lombok.*;
 
-import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,15 +11,13 @@ public class ReplyDto {
 
     private String rcontent;
 
-    private int bno; //게시물 fk
+    private String rdate; //작성일
 
-    private int mno; //작성자  fk
-
+    private int bno; //현재 댓글이 속해있는 게시물 번호
 
     //toEntity[저장용]
-    public ReplyEntity toEntity() {
+    public ReplyEntity toEntity() { //입력받는건 댓글 내용뿐
         return ReplyEntity.builder()
-                .rno(this.rno)
                 .rcontent(this.rcontent)
                 .build();
     }
