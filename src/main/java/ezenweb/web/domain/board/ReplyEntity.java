@@ -45,6 +45,9 @@ public class ReplyEntity extends BaseTime {
                 .rcontent(this.rcontent)
                 .rdate(this.cdate.toLocalDate().toString())
                 .rindex(this.rindex)
+                .mno(this.memberEntity.getMno())
+                .mname(this.memberEntity.getMname())
+                /*.rereplyDtoList(new ArrayList<>()) Builder.Defalut 선택시 생략 가능*/
                 //cdate[LocalDateTime] rdate[String] => objectMapper이 LocalDateTime 지원을 안해서 toString()
                 .build();
     }

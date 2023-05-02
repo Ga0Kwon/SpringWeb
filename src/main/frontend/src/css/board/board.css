@@ -1,0 +1,36 @@
+/*댓글 input*/
+.rcontent { padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; resize: none; width: 100%; height: 50px; }
+.rcontent:focus { outline: none; border-color: #007bff; box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); }
+
+.replyInputBox{ /*댓글 작성 구역 부분*/
+    display : flex;
+}
+
+/*댓글 작성 버튼*/
+.replyWriteBtn { background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+.replyWriteBtn:hover { background-color: #0069d9; }
+.replyWriteBtn:focus { outline: none; }
+
+
+.replyBox { display: flex; flex-direction: column; margin-bottom: 20px; border: 1px solid #ddd; padding: 10px; border-radius: 5px; }
+.replayMname { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
+.replyRdate { font-size: 14px; color: #999; margin-bottom: 5px; }
+.replyRcontent { border: none; font-size: 16px; margin-top: 10px; background-color: #f8f9fa; padding: 10px; border-radius: 5px; width: 100%; }
+.replyRcontent:focus { outline: none; }
+
+.replyBox { display: flex; flex-direction: column; margin-bottom: 20px; border: 1px solid #ddd; padding: 10px; border-radius: 5px; }
+.replayMname { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
+.replyRdate { font-size: 14px; color: #999; margin-bottom: 5px; }
+.replyRcontent { border: none; font-size: 16px; margin-top: 10px; background-color: #f8f9fa; padding: 10px; border-radius: 5px; width: 100%; }
+.replyRcontent:focus { outline: none; }
+
+.replyBtn button{
+    background-color: transparent;
+}
+
+.replyCount{
+    margin-top : 20px;
+    font-size: 8px;
+
+}
+

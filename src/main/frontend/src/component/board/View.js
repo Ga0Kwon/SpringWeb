@@ -6,11 +6,14 @@ import {Container} from '@mui/material'
 
 import ReplyList from './ReplyList';
 
-import OneWayAppReply from './OneWayAppReply'
 
 export default function View(props){
+
+    //게시물 : 게시물 정보 + 댓글 + 대댓글
+    //Restful API 으로 응답받은 게시물 정보
     const [board, setBoard] = useState({replyDtoList : []}); //board 안에 replyDtoList이 들어있다.
 
+    //URL 쿼리스트링 변수  요청
     const params = useParams(); //useParams() 훅 : 경로[URL]상의 매개변수 반환
     /*console.log("params : "+ params.bno)*/
 
@@ -23,6 +26,8 @@ export default function View(props){
             console.log(err)
         })
     }
+
+    //처음 열렸을때 getBoard()
     useEffect(() => {
         getBoard();
     }, []) //setBoard() 할때마다 실행되는 useEffect
@@ -55,10 +60,11 @@ export default function View(props){
     const[login, setLogin] = useState(JSON.parse(sessionStorage.getItem("login_token")));
 
     //댓글 작성시 렌더링
-    const onReplyWrite = (rcontent) => {
+    const onReplyWrite = (rcontent, rindex) => {
         let info = {
             rcontent : rcontent,
-            bno : board.bno
+            bno : board.bno,
+            rindex : rindex
         }
        console.log(info);
 
@@ -90,11 +96,13 @@ export default function View(props){
         })
     }
 
+    //수정 렌더링
     const onReplyUpdate = (rno, rcontent) => {
         let info = {
             rno : rno,
             rcontent : rcontent
        }
+
       console.log(info)
       axios.put("/board/reply", info).then(r => {
         if(r.data == true){
@@ -111,7 +119,8 @@ export default function View(props){
                 <div> <button type = "button" onClick = {onDelete}>삭제</button><button type = "button" onClick = {onUpdate}>수정</button></div>
                 : <div></div> ;
 
-    return (<>
+    //내용 채워지기 전에 먼저 실행되기 때문에 replyDtoList : [] => 위에 깡통 지정 필수
+    return (
         <Container>
            <div>
                 <h3>제목</h3> {board.btitle}
@@ -122,5 +131,5 @@ export default function View(props){
            <ReplyList onReplyWrite = {onReplyWrite} onReplyDelete = {onReplyDelete} onReplyUpdate = {onReplyUpdate} replyList = {board.replyDtoList}/>
            {/*<ReplyList onReplyWrite = {onReplyWrite} onReplyDelete = {onReplyDelete} onReplyUpdate = {onReplyUpdate} replyDtoList = {board.replyDtoList}/>*/}
         </Container>
-    </>)
+    )
 }

@@ -181,10 +181,19 @@ public class BoardService {
            List<ReplyDto> replyDtoList = new ArrayList<ReplyDto>();
            //댓글 같이 형변환[toDto vs. 서비스]
            boardEntity.getReplyEntityList().forEach((r) -> {
-               ReplyDto dto = r.toDto();
-               dto.setMemberDto(retrunMemberDto(r.getMemberEntity().getMno()));
-               System.out.println("회원정보 장착!!! "+ dto);
-               replyDtoList.add(dto);
+               if(r.getRindex() == 0){ //상위 댓글
+                   replyDtoList.add(r.toDto());
+               }
+               
+               //하위 댓글
+               boardEntity.getReplyEntityList().forEach((rr) -> {
+                   if(r.getRno() == rr.getRindex()){
+                       replyDtoList.get(replyDtoList.size() -1).getRereplyDtoList().add(rr.toDto());
+                        // 리스트 길이 - 1 : 최근 리스트에 등록한 인덱스 번호 = 마지막 인덱스
+                   }
+               });
+
+
            });
 
            BoardDto boardDto = boardEntity.toDto();
