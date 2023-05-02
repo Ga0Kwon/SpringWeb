@@ -25,15 +25,27 @@ export default function ReplyList(props){
     }
 
     //수정
-    const onUpdateHandler = (e, rno, i) => {
-        //Rcontent 읽기 모드 해제
-        if(replyList[i].readOnly == true){
-            replyList[i].readOnly = false;
-            alert('수정 후 완료버튼을 눌러주세요.')
-        }else{//Rcontent 읽기모드 적용
-            replyList[i].readOnly = true;
-            props.onReplyUpdate(rno, replyList[i].rcontent)
+    const onUpdateHandler = (e, rno, i, j) => {
+        if(j != undefined){
+            //Rcontent 읽기 모드 해제
+            if(replyList[j].readOnly == true){
+                replyList[j].readOnly = false;
+                alert('수정 후 완료버튼을 눌러주세요.')
+            }else{//Rcontent 읽기모드 적용
+                replyList[j].readOnly = true;
+                props.onReplyUpdate(rno, replyList[j].rcontent)
+            }
+        }else{
+            //Rcontent 읽기 모드 해제
+            if(replyList[i].readOnly == true){
+                replyList[i].readOnly = false;
+                alert('수정 후 완료버튼을 눌러주세요.')
+            }else{//Rcontent 읽기모드 적용
+                replyList[i].readOnly = true;
+                props.onReplyUpdate(rno, replyList[i].rcontent)
+            }
         }
+
 
         setReplyList([...replyList])
     }
@@ -49,28 +61,31 @@ export default function ReplyList(props){
                         <ReplyInput onReplyWrite={props.onReplyWrite} rindex ={rno}/> {/*상위 댓글을 작성하는*/}
                             {/*답글 출력*/}
                             {
-                                r.rereplyDtoList.map((rr, i) => {
+                                r.rereplyDtoList.map((rr, j) => {
                                     return(<>
                                         <div className ="replyBox">
                                            <span className="replayMname"> { rr.mname } </span>
                                            <span className="replyRdate"> { rr.rdate } </span>
 
                                            <input className ="replyRcontent"
-                                                value={r.rcontent}
-                                                readOnly = {r.readOnly}
-                                                onChange={(e) => onRcontentChange(e, rr.rno, i)}/>{/*읽기 모드*/}
+                                                value={rr.rcontent}
+                                                readOnly = {rr.readOnly}
+                                                onChange={(e) => onRcontentChange(e, rr.rno, i, j)}/>{/*읽기 모드*/}
                                             {
-                                                 login != null && login.mno == r.mno
+                                                 login != null && login.mno == rr.mno
                                                 ?
                                                     <>
-                                                        <button onClick={ (e)=>onUpdateHandler( e , r.rno, i ) } >{
-                                                            r.readOnly == true? '수정' : '완료'
-                                                        }</button>
-                                                        <button onClick={ (e)=>onDeleteHandler( e , r.rno ) } >삭제</button>
+                                                        <div class="replyBtn">
+                                                            <button onClick={ (e)=>onUpdateHandler( e , rr.rno, i, j ) } >
+                                                                 {rr.readOnly == true? '수정' : '완료'}
+                                                            </button>
+                                                            <button onClick={ (e)=>onDeleteHandler( e , rr.rno ) } >삭제</button>
+                                                        </div>
                                                     </>
                                                 :
                                                 <></>
                                             }
+                                            </div>
                                     </>)
                                 })
                             }
@@ -86,8 +101,13 @@ export default function ReplyList(props){
     }
 
     // 댓글 내용 수정
-    const onRcontentChange = (e, rno, i) => {
-        replyList[i].rcontent = e.target.value;
+    const onRcontentChange = (e, rno, i, j) => {
+        if(j != undefined){ //자식 인 경우 rindex = 1
+            replyList[j].rcontent = e.target.value;
+        }else{ //부모 일경우 rindex = 0
+            replyList[i].rcontent = e.target.value;
+        }
+
         setReplyList([...replyList]) // 렌더링
     }
 
