@@ -3,12 +3,14 @@ package ezenweb.web.socket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 //* 소켓 매핑을 잡아줌
 @Configuration // 컴포넌트 등록 [주요 : Service , Controllerm Repository 등등]
 @Slf4j
+@EnableWebSocket // * 웹 소켓 연결 WSA 프로토콜, WS 프로토콜의 URL 매핑 연결
 public class WebSocketConfiguration implements WebSocketConfigurer { //implments : 구현 하다
 
     //스프링 빈에 등록되는것은 하나이다(같은 객체일 경우) => 싱글톤을 쓸 필요가 없다 => 빈을 사용하기 때문!
