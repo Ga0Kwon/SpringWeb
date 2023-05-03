@@ -40,6 +40,7 @@ export default function Header(props){
             <a href = "/board/list">게시판</a>
             <a href = "/admin/dashboard" > 관리자모드</a>
             <a href = "/todo/list">TODO[비회원]</a>
+            <a href = "/chatting/home">익명 채팅방</a>
             {login == null ?
                 ( <>
                     <a href = "/member/login" > login</a>

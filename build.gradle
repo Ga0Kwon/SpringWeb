@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //JPA [application.properties 이 반드시 필요!!!]
     implementation 'org.springframework.boot:spring-boot-starter-security' //스프링 시큐리티
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' //OAuth2 관련
+    implementation 'org.springframework.boot:spring-boot-starter-websocket' //웹 소켓 관련
 }
 
 tasks.named('test') {

@@ -23,6 +23,7 @@ import ReplyList from "./board/ReplyList";
 import DashBoard from "./admin/DashBoard";
 
 import AppTodo from "../example/exBook/AppTodo";
+import Chatting from "./board/Chatting";
 
 /*
     React-router-dom 다양한 라우터 컴포넌트 제공
@@ -38,7 +39,7 @@ export default function Index(props){
         <BrowserRouter>
 
             <Header/> {/*헤더는 라우터에 넣지X*/}
-
+            {/*주소는 원하는 대로 */}
             <Routes>
                 <Route path = "/" element={<Main/>}/>
                 <Route path = "/member/login" element={<Login/>}/>
@@ -46,12 +47,17 @@ export default function Index(props){
                 <Route path = "/member/infoFind" element={<InfoFind/>}/>
                 <Route path = "/member/update" element={<Update/>}/>
                 <Route path = "/member/deleteMember" element={<DeleteMember/>}/>
+
                 <Route path = "/board/list" element={<Board/>}/>
                 <Route path = "/board/view/:bno" element={<View/>}/>
                 <Route path = "/board/update/:bno" element={<BoardUpdate/>}/>
                 <Route path = "/board/write" element={<BoardWrite/>}/>
                 <Route path = "/board/category" element={<Category/>}/>
+
+                <Route path = "/chatting/home" element={<Chatting/>}/>
+
                 <Route path = "/admin/dashboard" element={<DashBoard/>}/>
+
                 <Route path = "/todo/list" element={<AppTodo/>}/>
             </Routes>
 
