@@ -1,0 +1,56 @@
+h6{
+    margin : 20 auto;
+}
+/*채팅 윗 부분*/
+.chatContentBox {
+    width : 50%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    height: 400px;
+    padding: 10px;
+    border : 1px solid #eeeeee;
+    margin : 20px auto;
+}
+
+.chatCotent {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 14px;
+    background-color : #FFABA2;
+}
+.msgId { margin-right: 10px; font-weight: bold; font-size: 16px; color: #4b4b4b; width: 70px; }
+.msgTime { margin-right: 10px; color: #777777; font-size: 14px; width: 100px; }
+.msgText { word-break: break-all; }
+
+.chatCotent span{
+    font-size: 14px;
+    margin : 5px 15px 5px 5px;
+}
+/* 특정 요소 안에 [자식 요소]가 여러개 일 때*/
+/*id*/
+.chatCotent span::nth-child(1){ /*자식 요소의 인덱스를 건들 수 있다.*/
+    width : 10%;
+    font-weight : bold;
+}
+
+/*time*/
+.chatCotent span::nth-child(2){ /*자식 요소의 인덱스를 건들 수 있다.*/
+    width : 20%;
+}
+
+/*msg*/
+.chatCotent span::nth-child(3){ /*자식 요소의 인덱스를 건들 수 있다.*/
+    width : 70%;
+
+    /*내용이 크기보다 커졌을 때 자동 줄 바꿈*/
+    word-break : break-all; /*특정 사이즈 넘어갔을 때 자동 줄바꿈*/
+}
+
+/*채팅 하단 부분*/
+.chatInputBox { width : 50%; display: flex; align-items: center; justify-content: space-between; padding: 10px; background-color: #F5F5F7; border-radius: 10px; margin : 20px auto; }
+.chatInputBox span { font-size: 18px; font-weight: bold; color: #616060; margin-right: 10px; }
+.chatInputBox .inputBox { flex: 1; padding: 10px; border: none; border-radius: 5px; font-size: 16px; color: #616060; background-color: #ffffff; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); }
+.chatInputBox .chatBtn { background-color: #FA8072; border: none; border-radius: 5px; color: #ffffff; font-weight: bold; font-size: 16px; padding: 10px 20px; cursor: pointer; transition: all 0.3s ease-in-out; }
+.chatInputBox .chatBtn:hover { background-color: #ff5743; }

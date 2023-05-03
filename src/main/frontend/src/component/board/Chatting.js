@@ -2,6 +2,7 @@ import React,{useEffect, useState, useRef} from 'react';
 
 import {Container} from '@mui/material'
 
+import styles from '../../css/board/chatting.css'
 export default function Chatting(props) { //export : 내보내기
 
     let[id, setId] = useState(''); //익명채팅에서 사용할 id [난수 저장]
@@ -15,11 +16,11 @@ export default function Chatting(props) { //export : 내보내기
    //let webSocket = new WebSocket("ws://localhost:8080/서버주소");
 
    //2. 재렌더링 될 때 데이터 상태 유지
-   let webSocket = useRef(null);
+   let webSocket = useRef(null); //1. 모든 함수 사용할 클라이언트 소켓 변수
 
-    useEffect (() => {
-        if(!webSocket.current){//만약 클라이언트 소켓이 없을 때(접속이 안되어 있을 때.
-               webSocket = useRef(new WebSocket("ws://localhost:8080/chat"));
+    useEffect (() => { //2. 재 렌더링시 1번만 실행
+        if(!webSocket.current){//3. 만약 클라이언트 소켓이 없을 때(접속이 안되어 있을 때.
+               webSocket.current = new WebSocket("ws://localhost:8080/chat");
 
                //3. 클라이언트 소켓이 서버 소켓에 접속했을 때 이벤트
                webSocket.current.onopen = ()=>{
@@ -57,7 +58,7 @@ export default function Chatting(props) { //export : 내보내기
         let msgBox = {
             id : id,
             msg : msgInput.current.value,
-            time : new Date().toLocalTimeString() //현재 시간만 빼옴
+            time : new Date().toLocaleTimeString() // 현재 시간만
         }
         //msgInput 변수가 참조중인  <input ref = {msgInput} type ="text" className="inputBox"/>해당 input을 DOM객체로 호출
         webSocket.current.send(JSON.stringify(msgBox)); //클라이언트가 서버에게 메시지를 전송 [.send()]
@@ -66,15 +67,23 @@ export default function Chatting(props) { //export : 내보내기
     }
 
 
+    //8. 렌더링 할 때마다 스크롤 가장 하단으로 내리기
+    useEffect (() => { //메시지 받을 때마다 렌더링
+         document.querySelector(".chatContentBox").scrollTop = document.querySelector(".chatContentBox").scrollHeight;
+    },[msgContent])
+
     return(<>
         <Container>
             <h6>익명 채팅방</h6>
             <div className="chatContentBox">
                 {
-                    msgContent.map((msg) => {
+                    msgContent.map((m) => {
                         return (<>
-                            <div>
-                                {msg}
+                            {/*조건 스타일링  : styles= {조건 ? {참일 경우} : {거짓일 경우}*/}
+                            <div className ="chatCotent" style={m.id == id ? {backgroundColor:'#A2C0FF'} : { }}>
+                               <span> {m.id} </span>
+                               <span> {m.time} </span>
+                               <span> {m.msg} </span>
                             </div>
                         </>)
                     })
@@ -83,7 +92,7 @@ export default function Chatting(props) { //export : 내보내기
             <div className="chatInputBox">
                 <span>{id}</span>
                 <input ref = {msgInput} type ="text" className="inputBox"/>
-                <button onClick={onSend}>전송</button>
+                <button className="chatBtn" onClick={onSend}>전송</button>
             </div>
         </Container>
      </>)
