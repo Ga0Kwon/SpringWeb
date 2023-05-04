@@ -1,8 +1,10 @@
 import React,{useEffect, useState, useRef} from 'react';
 
 import {Container} from '@mui/material'
+import axios from 'axios';
 
 import styles from '../../css/board/chatting.css'
+
 export default function Chatting(props) { //export : 내보내기
 
     let[id, setId] = useState(''); //익명채팅에서 사용할 id [난수 저장]
