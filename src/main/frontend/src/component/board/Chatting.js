@@ -10,16 +10,20 @@ export default function Chatting(props) { //export : 내보내기
     //채팅 입력창[input] DOM 객체 제어 변수
     let msgInput = useRef(null);
 
+    //첨부파일 관련
+    let fileForm = useRef(null);
+    let fileInput = useRef(null);
+
     let[msgContent, setMsgContent] = useState([]); //현재 채팅중인 메시지를 저장하는 변수
 
    //1. 재렌더링 될 떼 마다 새로운 접속
-   //let webSocket = new WebSocket("ws://localhost:8080/서버주소");
+   //let webSocket = new WebSocket("ws://localhost:8080/서버주소"); => 바깥으로 빼면 재렌더링 할때마다 접속을 한다..
 
    //2. 재렌더링 될 때 데이터 상태 유지
    let webSocket = useRef(null); //1. 모든 함수 사용할 클라이언트 소켓 변수
 
     useEffect (() => { //2. 재 렌더링시 1번만 실행
-        if(!webSocket.current){//3. 만약 클라이언트 소켓이 없을 때(접속이 안되어 있을 때.
+        if(!webSocket.current){//3. 만약 클라이언트 소켓이 없을 때 접속이 안되어 있을 때.
                webSocket.current = new WebSocket("ws://localhost:8080/chat");
 
                //3. 클라이언트 소켓이 서버 소켓에 접속했을 때 이벤트
@@ -50,20 +54,32 @@ export default function Chatting(props) { //export : 내보내기
     })
 
 
-    //7. 메시지 전송
+    //7. 메시지/첨부파일 전송
     const onSend = ()=>{
 /*        console.log(msgInput.current.value);
         console.log(document.querySelector(".inputBox").value)*/
 
+        //메시지 전송
         let msgBox = {
             id : id,
             msg : msgInput.current.value,
-            time : new Date().toLocaleTimeString() // 현재 시간만
+            time : new Date().toLocaleTimeString(), // 현재 시간만
+            type : "msg"
         }
-        //msgInput 변수가 참조중인  <input ref = {msgInput} type ="text" className="inputBox"/>해당 input을 DOM객체로 호출
-        webSocket.current.send(JSON.stringify(msgBox)); //클라이언트가 서버에게 메시지를 전송 [.send()]
 
-        msgInput.current.value = "";
+        if(msgBox.msg != ''){ //내용이 비어있지 않을 경우/있으면 보낸다.
+            //msgInput 변수가 참조중인  <input ref = {msgInput} type ="text" className="inputBox"/>해당 input을 DOM객체로 호출
+            webSocket.current.send(JSON.stringify(msgBox)); //클라이언트가 서버에게 메시지를 전송 [.send()]
+
+            msgInput.current.value = "";
+        }
+
+        //2. 첨부파일 전송 [axios 이용한 서버에게 첨부파일 업로드]
+        if(fileInput.current.value != ''){ //첨부파일이 존재하면
+            axios.post("/chat/fileupload", new FormData(fileForm.current))
+                .then(r => {console.log(r.data);})
+        }
+
     }
 
 
@@ -93,6 +109,9 @@ export default function Chatting(props) { //export : 내보내기
                 <span>{id}</span>
                 <input ref = {msgInput} type ="text" className="inputBox"/>
                 <button className="chatBtn" onClick={onSend}>전송</button>
+                <form ref={fileForm}>
+                     <input type="file" name="attachFile" ref={fileInput}/>
+                </form>
             </div>
         </Container>
      </>)
