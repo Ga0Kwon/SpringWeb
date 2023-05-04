@@ -18,9 +18,9 @@ public class ChatController {
         FileDto result = fileService.fileupload(multipartFile);
         return result;
     }
-    @GetMapping("/fileupload") //chat 관련 첨부파일 다운로드
-    public void filedownload(@RequestParam("filepath") String fiulepath){
-        
+    @GetMapping("/filedownload") //chat 관련 첨부파일 다운로드
+    public void filedownload(@RequestParam("uuidFile") String uuidFile){
+        fileService.filedownload(uuidFile);
     }
 
 

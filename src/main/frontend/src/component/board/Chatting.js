@@ -79,7 +79,20 @@ export default function Chatting(props) { //export : 내보내기
         //2. 첨부파일 전송 [axios 이용한 서버에게 첨부파일 업로드]
         if(fileInput.current.value != ''){ //첨부파일이 존재하면
             axios.post("/chat/fileupload", new FormData(fileForm.current))
-                .then(r => {console.log(r.data);})
+                .then(r => {console.log(r.data);
+                    //다른 소켓들에게 업로드 결과 전달
+                     let msgBox = {
+                        id : id,
+                        msg : msgInput.current.value,
+                        time : new Date().toLocaleTimeString(), // 현재 시간만
+                        type : "file",
+                        fileInfo : r.data //업로드 후 응답 받은 파일 정보
+                    }
+
+                    webSocket.current.send(JSON.stringify(msgBox)); //파일 소켓에 보내기
+                    fileInput.current.value = "";
+
+                })
         }
 
     }
@@ -101,7 +114,21 @@ export default function Chatting(props) { //export : 내보내기
                             <div className ="chatCotent" style={m.id == id ? {backgroundColor:'#A2C0FF'} : { }}>
                                <span> {m.id} </span>
                                <span> {m.time} </span>
-                               <span> {m.msg} </span>
+                               {
+                                    m.type == 'msg' ?
+                                    <span> {m.msg} </span>
+                                    :
+                                    (<>
+                                        {/*두줄 이상일 땐 이렇게 (<></>) 해야 함*/}
+                                        <span>
+                                            <span>{m.fileInfo.originalFilename}</span>
+                                            <span>{m.fileInfo.sizeKb}</span>
+                                            {/*쿼리스트링 형식으로 get */}
+                                            <span><a href ={"/chat/filedownload?uuidFile="+m.fileInfo.uuidFilename}>저장</a></span>
+                                        </span>
+                                    </>)
+
+                               }
                             </div>
                         </>)
                     })
