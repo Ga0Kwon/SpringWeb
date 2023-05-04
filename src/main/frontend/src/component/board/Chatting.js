@@ -11,12 +11,12 @@ export default function Chatting(props) { //export : 내보내기
 
     //채팅 입력창[input] DOM 객체 제어 변수
     let msgInput = useRef(null);
+    let[msgContent, setMsgContent] = useState([]); //현재 채팅중인 메시지를 저장하는 변수
 
     //첨부파일 관련
     let fileForm = useRef(null);
     let fileInput = useRef(null);
-
-    let[msgContent, setMsgContent] = useState([]); //현재 채팅중인 메시지를 저장하는 변수
+    let chatContentBox = useRef(null);
 
    //1. 재렌더링 될 떼 마다 새로운 접속
    //let webSocket = new WebSocket("ws://localhost:8080/서버주소"); => 바깥으로 빼면 재렌더링 할때마다 접속을 한다..
@@ -78,23 +78,30 @@ export default function Chatting(props) { //export : 내보내기
 
         //2. 첨부파일 전송 [axios 이용한 서버에게 첨부파일 업로드]
         if(fileInput.current.value != ''){ //첨부파일이 존재하면
-            axios.post("/chat/fileupload", new FormData(fileForm.current))
-                .then(r => {console.log(r.data);
-                    //다른 소켓들에게 업로드 결과 전달
-                     let msgBox = {
-                        id : id,
-                        msg : msgInput.current.value,
-                        time : new Date().toLocaleTimeString(), // 현재 시간만
-                        type : "file",
-                        fileInfo : r.data //업로드 후 응답 받은 파일 정보
-                    }
-
-                    webSocket.current.send(JSON.stringify(msgBox)); //파일 소켓에 보내기
-                    fileInput.current.value = "";
-
-                })
+            let formData = new FormData(fileForm.current);
+            fileAxios(formData);
         }
+    }
 
+    //파일 전송 axios
+    const fileAxios = (formData)=>{
+
+        axios.post("/chat/fileupload", formData)
+            .then(r => {console.log(r.data);
+
+            //다른 소켓들에게 업로드 결과 전달
+             let msgBox = {
+                id : id,
+                msg : msgInput.current.value,
+                time : new Date().toLocaleTimeString(), // 현재 시간만
+                type : "file",
+                fileInfo : r.data //업로드 후 응답 받은 파일 정보
+            }
+
+            webSocket.current.send(JSON.stringify(msgBox)); //파일 소켓에 보내기
+            fileInput.current.value = "";
+
+        })
     }
 
 
@@ -106,7 +113,36 @@ export default function Chatting(props) { //export : 내보내기
     return(<>
         <Container>
             <h6>익명 채팅방</h6>
-            <div className="chatContentBox">
+            <div
+                className="chatContentBox"
+                onDragEnter={(e) => {
+                    e.preventDefault(); {/*상위 이벤트 제거*/}
+                }}
+                onDragOver={(e) => {
+                    e.preventDefault(); {/*상위 이벤트 제거*/}
+                    e.target.style.backgroundColor = "#e8e8e8";
+                }}
+                onDragLeave={(e) => {
+                    e.preventDefault(); {/*상위 이벤트 제거*/}
+                    e.target.style.backgroundColor = "#ffffff";
+                }}
+                onDrop={(e) => {
+                   e.preventDefault(); {/*상위 이벤트 제거*/}
+
+                   {/* drop된 첨부파일들을 호출 e.dataTransfer.files */}
+
+                   let files = e.dataTransfer.files;
+
+                   for(let i = 0; i < files.length; i++) {
+                        if(files[i] != null || files[i] != undefined) {
+                           {/*파일이 존재하면*/}
+                           let formdata =new FormData(fileForm.current);
+                           formdata.set("attachFile", files[i]);
+                           fileAxios(formdata);
+
+                        }
+                   }
+               }}>
                 {
                     msgContent.map((m) => {
                         return (<>
