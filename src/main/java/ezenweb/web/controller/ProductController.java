@@ -32,7 +32,7 @@ public class ProductController { //리액트와 통신 역할[매핑]
     }
 
     @DeleteMapping("")
-    private boolean deleteProduct(@RequestParam int id){
+    private boolean deleteProduct(@RequestParam String id){
         return productService.deleteProduct(id);
     }
 }
