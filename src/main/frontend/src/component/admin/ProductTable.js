@@ -31,7 +31,33 @@ export default function ProductTable(props){
         getProductList();
     }, [])
 
+    //4. 데이터 테이블에서 선택된 제품 id 리스트
+    const [rowsSelectionModel, setRowsSelectionModel] = useState([]) //선택된 제품 목록 가져와 저장할
+
+    //5. 삭제 함수
+    const onDeleteHandler = () => {
+        let yesOrNo = window.confirm('정말 삭제하시겠습니까?')
+
+        if(yesOrNo == true) { //확인 버튼을 클릭했을 때
+            //선택된 제품 리스트를 하나씩 서버에게 전달
+            rowsSelectionModel.forEach(r => { //반복문 돌려서 하나씩 보낸다.
+                 axios.delete('/product', {params : {id : r}})
+                    .then(r => {
+                        if(r.data == true){
+                            getProductList();
+                        }
+                    })
+            })
+
+        }
+    }
+
     return(<>
+        <button
+            type="button"
+            onClick ={onDeleteHandler}
+            disabled={rowsSelectionModel.length <= 0 ? true : false}
+        >선택 삭제 </button>
         <div style={{ height: 400, width: '100%' }}>
           <DataGrid
             rows={rows}
@@ -41,8 +67,11 @@ export default function ProductTable(props){
                 paginationModel: { page: 0, pageSize: 5 },
               },
             }}
-            pageSizeOptions={[5, 10]}
+            pageSizeOptions={[5, 10, 15, 20]}
             checkboxSelection
+            onRowSelectionModelChange={(newRowSelectionModel) => {
+                setRowsSelectionModel(newRowSelectionModel);
+            }}
           />
         </div>
     </>)
