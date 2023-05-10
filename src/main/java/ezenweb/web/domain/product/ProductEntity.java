@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter @ToString @AllArgsConstructor @NoArgsConstructor @Builder
@@ -16,7 +17,7 @@ public class ProductEntity extends BaseTime {
     @Column( nullable = false)  private String pname;       // 제품명 [ JPA로 DB 필드 선언시 _ : 제외  ]
     @Column( nullable = false)  private int pprice;         // 제품가격
     @Column( nullable = false)  private String pcategory;   // 제품카테고리
-    @Column( nullable = true ,columnDefinition = "TEXT" ) private String pcommnet; // 제품설명
+    @Column( nullable = true ,columnDefinition = "TEXT" ) private String pcomment; // 제품설명
     @Column( nullable = false , length = 100 ) private String pmanufacturer; // 제조사
     @ColumnDefault("0")@Column( nullable = false) private byte pstate; // 제품상태 [ 0 : 판매중 , 1 : 판매중지 , 2 : 재고없음 ]
     @ColumnDefault("0")@Column( nullable = false) private int pstock; // 제품 재고/수량
@@ -26,9 +27,8 @@ public class ProductEntity extends BaseTime {
     //제약 조건 : pk가 삭제되면 fk객체의 제약조건 cascade
     @OneToMany(mappedBy = "productEntity", cascade = CascadeType.REMOVE) //pk 선언시 => 매핑할 필드명
     @ToString.Exclude
-    //@OnDelete(action = OnDeleteAction.CASCADE) // cascade = Casecadetype.REMOVE와 같음
     @Builder.Default //builder을 안해도 자동 빌드
-    private List<ProductImgEntity> productImgEntityList;
+    private List<ProductImgEntity> productImgEntityList = new ArrayList<>();
 
     // 구매내역 [ 1 : 다 ] 연관관계 [ *추후 ]
 
@@ -37,7 +37,7 @@ public class ProductEntity extends BaseTime {
         return ProductDto.builder()
                 .id( this.id ).pname( this.pname )
                 .pprice( this.pprice).pcategory( this.pcategory)
-                .pcommnet( this.pcommnet ).pmanufacturer( this.pmanufacturer )
+                .pcomment( this.pcomment ).pmanufacturer( this.pmanufacturer )
                 .pstate( this.pstate ).pstock( this.pstock )
                 .cdate( this.cdate.toString() )
                 .udate( this.udate.toString() )
@@ -53,7 +53,6 @@ public class ProductEntity extends BaseTime {
 	cascade = CascadeType.REMOVE : pk객체 삭제시 fk객체도 모두 삭제
 	cascade = CascadeType.DETACH : pk객체 삭제/수정의 변경사항을 fk에 반영 X
 	cascade = CascadeType.PERSIST : 기본 값 하위가 추가되었을 때 상위도 다시 불러온다.
-
 
 	@OnDelete(action = OnDeleteAction.CASCADE) // cascade = Casecadetype.REMOVE와 같음
 */

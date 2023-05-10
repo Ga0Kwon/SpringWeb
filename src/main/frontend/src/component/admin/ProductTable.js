@@ -8,7 +8,7 @@ const columns = [
   { field: 'pname', headerName: '제품명', width: 150 },
   { field: 'pprice', headerName: '제품 가격', type : 'number', width: 70 },
   { field: 'pcategory', headerName: '카테고리', width: 70 },
-  { field: 'pcommnet', headerName: '제품 설명',width: 50,},
+  { field: 'pcomment', headerName: '제품 설명',width: 50,},
   { field: 'pmanufacturer', headerName: '제조사', width: 70 },
   { field: 'pstate', headerName: '상태', type : 'number', width: 30 },
   { field: 'pstock', headerName: '재고수량', type : 'number', width: 70 },

@@ -11,6 +11,8 @@ import TabPanel from '@mui/lab/TabPanel';
 
 //제품 출력
 import ProductTable from './ProductTable';
+//제품 등록
+import ProductWrite from './ProductWrite';
 
 export default function DashBoard(props){
 
@@ -54,7 +56,7 @@ export default function DashBoard(props){
                             <button onClick={setCategory} type = "button">카테고리 등록</button>
                         </TabPanel>
                         <TabPanel value="2">
-                            제품 등록
+                            <ProductWrite />
                         </TabPanel>
                         <TabPanel value="3">
                             <ProductTable />

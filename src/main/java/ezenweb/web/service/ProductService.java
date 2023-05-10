@@ -33,7 +33,7 @@ public class ProductService {       /* 주요기능과 DB처리 요청 역찰[ T
     // 2.
     @Transactional
     public boolean postProduct(ProductDto productDto){ log.info("post : " + productDto);
-
+        log.info("postProduct service  : " + productDto);
         // 1. id 생성 [ 등록 오늘날짜 + 밀리초 + 난수]
         String number = ""; for( int i = 0 ; i<3; i++ ){ number+= new Random().nextInt(10); } // 737 , 831 , 001
         String pid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddSSS")) + number;
@@ -53,7 +53,7 @@ public class ProductService {       /* 주요기능과 DB처리 요청 역찰[ T
         if( entityOptional.isPresent() ){
             ProductEntity entity = entityOptional.get();
             entity.setPcategory( productDto.getPcategory() );
-            entity.setPcommnet( productDto.getPcommnet() );
+            entity.setPcomment( productDto.getPcomment() );
             entity.setPname( productDto.getPname());
             entity.setPprice( productDto.getPprice() );
             entity.setPmanufacturer( productDto.getPmanufacturer() );
