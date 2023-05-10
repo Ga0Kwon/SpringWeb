@@ -12,6 +12,7 @@ export default function ProductWrite(props){
             .then(r => {
                 if(r.data == true){
                     alert('등록 성공')
+                    props.tabChange(null, '3')
                 }else{
                     alert('등록 실패')
                 }

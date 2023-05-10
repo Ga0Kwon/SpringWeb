@@ -56,7 +56,7 @@ export default function DashBoard(props){
                             <button onClick={setCategory} type = "button">카테고리 등록</button>
                         </TabPanel>
                         <TabPanel value="2">
-                            <ProductWrite />
+                            <ProductWrite tabChange={handleChange}/>
                         </TabPanel>
                         <TabPanel value="3">
                             <ProductTable />
