@@ -47,6 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/board/write").hasRole("USER") // 글쓰기 회원제
                     .antMatchers("/**").permitAll() //나머지는 권한X
                 .and()
+                //.csrf().ignoringAntMatchers() => 하나하나 여는 경우
                 .formLogin()
                     .loginPage("/member/login") // 로그인으로 사용될 페이지 매핑 URL[어떤 페이지에서 로그인하는지]
                     .loginProcessingUrl("/member/login") // 로그인을 처리할 매핑 URL
