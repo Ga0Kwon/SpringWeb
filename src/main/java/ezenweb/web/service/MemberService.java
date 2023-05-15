@@ -90,7 +90,7 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
             // 구글의 이메일 호출
 
         Set<GrantedAuthority> rolesList = new HashSet<GrantedAuthority>();
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_user");
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
         rolesList.add(authority);
         memberDto.setRolesList(rolesList);
 
