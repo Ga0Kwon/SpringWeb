@@ -20,6 +20,11 @@ public class ProductController { //리액트와 통신 역할[매핑]
     private List<ProductDto> getProduct(){
         return productService.getProduct();
     }
+
+    @GetMapping("/main")
+    private List<ProductDto> mainGet(){
+        return productService.mainGet();
+    }
     //Body => 객체라는 뜻 => JSON이다. => form 전송이기 때문에 @ReqeustBody타입이 json타입이다.
     //객체로 받을때 -> mulitpart를 지원X
     @PostMapping("")

@@ -16,8 +16,14 @@ import java.util.UUID;
 public class FileService {
 
     // * 첨부파일 저장 할 경로 [ 1. 배포 전, 2. 배포 후]
-    public String path = "C:\\java\\";
+    // 1. 단순 다운로드, 업로드 시 
+    // public String path = "C:\\java\\";
     //default String path = "C:\\java\\"; productService와 같은 패키지임으로 default도 가능
+    // 2. 업로드, 다운로드, 리액트 리소스 접근시
+    //JS[react] 로컬드라이브[C] 접근 불가능 ---> 리액트 서버에 등록
+    //springboot + react 통합
+    //spring build --> spring resources --> spring build --> 프로젝트내 build
+    public String path = "C:\\Users\\504\\IdeaProjects\\SpringWeb\\build\\resources\\main\\static\\static\\media\\";
 
     public FileDto fileupload(MultipartFile multipartFile){ //첨부파일 1개만 / 여러개일 경우 List<MultipartFile> 라고하면 된다.
 
