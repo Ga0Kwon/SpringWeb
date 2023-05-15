@@ -40,6 +40,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         //super.configure(http); //super : 부모클래스 호출 => 이거 주석처리하면 첫 로그인 화면
         // 부모꺼 안써 => 사이트 열림
         http
+                .authorizeHttpRequests() //1. 인증[권한]에 따른 http 요청 제한
+                    .antMatchers("/admin/**").hasRole("ADMIN") //admin 관련 페이지는 admin만
+                    .antMatchers("/board/update").hasRole("USER") //수정 회원제
+                    .antMatchers("/board/delete").hasRole("USER") //삭제 회원제
+                    .antMatchers("/board/write").hasRole("USER") // 글쓰기 회원제
+                    .antMatchers("/**").permitAll() //나머지는 권한X
+                .and()
                 .formLogin()
                     .loginPage("/member/login") // 로그인으로 사용될 페이지 매핑 URL[어떤 페이지에서 로그인하는지]
                     .loginProcessingUrl("/member/login") // 로그인을 처리할 매핑 URL
