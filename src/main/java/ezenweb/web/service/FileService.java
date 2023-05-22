@@ -3,6 +3,8 @@ package ezenweb.web.service;
 import ezenweb.web.domain.file.FileDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +26,74 @@ public class FileService {
     //springboot + react 통합
     //spring build --> spring resources --> spring build --> 프로젝트내 build
     public String path = "C:\\Users\\504\\IdeaProjects\\SpringWeb\\build\\resources\\main\\static\\static\\media\\";
+
+/*    // ***** application.properties 에 버킷 설정값을 가져와서 변수에 저장[서비스에 보완에 관련된 코드 숨기기]
+    @Value("${cloud.aws.s3.bucket}") //lombok 아님
+    private String bucket; //버킷 명
+
+    // ***** application.properties 에 버킷 설정값을 가져와서 변수에 저장[서비스에 보완에
+    @Value("${cloud.aws.s3.bucket.url}") //lombok 아님
+    private String defaultURL; //버킷 저장 경로
+
+    //2. S3 업로드 함수 선언
+    public void uploadS3(String uuidFile, File file){
+        //1) aws s3 전송 객체 생성
+        TransferManager transferManager = new TransferManager(amazonS3Client);
+        //2) 요청 객체
+        // putObjectRequest = new PutObjectRequest("버킷명", 파일명, 업로드할 파일)
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, uuidFile, file);
+
+        //3) 업로드할 객체 생성[대기]
+        Upload upload = transferManager.upload(putObjectRequest);
+
+        //4) 업로드 객체 업로드 시;ㄹ행
+        try{
+            upload.waitForCompletion();
+        }catch (InterruptedException e){
+            throw new RuntimeException(e);
+        }
+    }*/
+
+
+    //3. AWS S3 리소스 업로드, 다운로드
+    // 업로드[복사 - 바이트 개념] => 바이트를 복사해서 이동하는 개념
+    // 1) S3 객체 생성
+   /* @Autowired => 그레들에 amazon 추가해줘야함
+    private AmazonS3Client amazonS3Client
+
+     public FileDto fileupload(MultipartFile multipartFile){
+        String s3url = null;
+
+        //1. 첨부파일 존재하는지 확인
+        if(!multipartFile.getOriginalFilename().equals("")){
+
+            //* 만약에 다른 이미지인데 파일이 동일하면 중복 발생 [ 색별 불가 ]
+            String fileName = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename();
+            //2, 경로 + 파일명 조합해서 file 클래스 생성 [ 왜 ??? 파일??? => transferTo()가 File 객체만 받음]
+            File file = new File(path + fileName);
+
+            //3. 업로드
+            // multipartFile.transferTo(저장할 file 클래스의 객체를 넣어야한다.);
+            try {
+                multipartFile.transferTo(file);
+                //*** S3 업로드 함수 선언
+                uploadS3(fileName, file);
+                // 업로드 된 S3 리소스 경로
+               s3url = defaultUrl + fileName;
+            } catch (IOException e) {
+
+                log.info("file upload error : " + e.getMessage());
+            }
+
+            //4. 반환
+            return FileDto.builder()
+                    .originalFilename(multipartFile.getOriginalFilename())
+                    .uuidFilename(fileName)
+                    .sizeKb(multipartFile.getSize()/1024 + "KB")
+                    .build();
+        }
+        return null;
+    }*/
 
     public FileDto fileupload(MultipartFile multipartFile){ //첨부파일 1개만 / 여러개일 경우 List<MultipartFile> 라고하면 된다.
 
@@ -60,10 +130,10 @@ public class FileService {
         }
         return null;
     }
+    
     @Autowired
     private HttpServletResponse httpServletResponse; //http 응답 객체
-    
-    
+
     public void filedownload( String uuidFile){ //spring 다운로드 관한 API 없음
         String pathFile = path + uuidFile; //경로+uuid 파일명 : 실제 파일이 존재한는 위치
         
