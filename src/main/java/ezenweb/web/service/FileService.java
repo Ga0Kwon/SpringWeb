@@ -25,7 +25,7 @@ public class FileService {
     //JS[react] 로컬드라이브[C] 접근 불가능 ---> 리액트 서버에 등록
     //springboot + react 통합
     //spring build --> spring resources --> spring build --> 프로젝트내 build
-    public String path = "C:\\Users\\504\\IdeaProjects\\SpringWeb\\build\\resources\\main\\static\\static\\media\\";
+    //public String path = "C:\\Users\\504\\IdeaProjects\\SpringWeb\\build\\resources\\main\\static\\static\\media\\";
 
 /*    // ***** application.properties 에 버킷 설정값을 가져와서 변수에 저장[서비스에 보완에 관련된 코드 숨기기]
     @Value("${cloud.aws.s3.bucket}") //lombok 아님
@@ -109,7 +109,8 @@ public class FileService {
             //* 만약에 다른 이미지인데 파일이 동일하면 중복 발생 [ 색별 불가 ]
             String fileName = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename();
             //2, 경로 + 파일명 조합해서 file 클래스 생성 [ 왜 ??? 파일??? => transferTo()가 File 객체만 받음]
-            File file = new File(path + fileName);
+            File file = new File(System.getProperty("user.dir") + fileName);
+            //System.getProperty("user.dir") : 현재 실행되는 서버에 컴퓨터 루트 경로
 
             //3. 업로드
             // multipartFile.transferTo(저장할 file 클래스의 객체를 넣어야한다.);
